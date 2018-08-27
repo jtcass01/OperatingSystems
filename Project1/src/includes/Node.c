@@ -11,6 +11,7 @@
 #include <string.h>
 /* User Created Headers */
 #include "../headers/Node.h"
+#include "../headers/constants.h"
 
 Node *create_node(char *string){
 	Node *newNode = malloc(sizeof(Node));
@@ -24,7 +25,11 @@ Node *create_node(char *string){
 }
 
 void print_node(Node *node){
-	printf("Address: %p, Word: %s, Word Count: %d, previousNode: %p, nextNode: %p\n", node, node->word, node->count, node->previousNode, node->nextNode);
+	if(node == NULL) {
+		printf("This is a NULL node.  Cannot print.\n");
+	} else {
+		printf("Address: %p, Word: %s, Word Count: %d, previousNode: %p, nextNode: %p\n", node, node->word, node->count, node->previousNode, node->nextNode);
+	}
 }
 
 void copy_node(Node *destination, Node *source) {
@@ -34,101 +39,19 @@ void copy_node(Node *destination, Node *source) {
 	destination->previousNode = source->previousNode;
 }
 
-void swap_nodes(Node *node1, Node *node2){
-	Node* tmp = create_node("tmp");
+int compare_node_by_word(Node *node1, Node *node2) {
+	if (DEBUG) {
+		printf("\nComparing nodes by word...\n");
+		printf("Node1: ");
+		print_node(node1);
+		
+		printf("Node2: ");
+		print_node(node2);
 
-	copy_node(tmp, node1);
-
-	printf("\n\ntmp: ");
-	print_node(tmp);
-	printf("node1: ");
-	print_node(node1);
-	printf("node2: ");
-	print_node(node2);
-
-	if (node2->previousNode == node1) {
-		// Move Node 1 to Node 2's place
-		if(node2->nextNode != NULL) {
-			node2->nextNode->previousNode = node1;
-		}
-
-		node1->nextNode = node2->nextNode;
-		node1->previousNode = node2;
-
-		// Move Node 2 to Node 1's place
-		if(tmp->previousNode != NULL) {
-			tmp->previousNode->nextNode = node2;
-		}
-
-		node2->previousNode = tmp->previousNode;
-		node2->nextNode = node1;
-	} else if (node2->nextNode == node1) {
-		// Move Node 1 to Node 2's place
-		if(node2->previousNode != NULL) {
-			node2->previousNode->nextNode = node1;				
-		}
-
-		node1->nextNode = node2;
-		node1->previousNode = node2->previousNode;
-
-		// Move Node 2 to Node 1's place
-		if(tmp->nextNode != NULL) {
-			tmp->nextNode->previousNode = node2;
-		}
-
-		node2->nextNode = tmp->nextNode;
-		node2->previousNode = node1;
-	} else {
-		// Move Node 1 to Node 2's place
-		if(node2->previousNode != NULL) {
-			node2->previousNode->nextNode = node1;				
-		}
-		if(node2->nextNode != NULL) {
-			node2->nextNode->previousNode = node1;
-		}
-		node1->nextNode = node2->nextNode;
-		node1->previousNode = node2->previousNode;
-
-		// Move Node 2 to Node 1's place
-		node2->nextNode = tmp->nextNode;
-		node2->previousNode = tmp->previousNode;
-		if(tmp->nextNode != NULL) {
-			tmp->nextNode->previousNode = node2;
-		}
-		if(tmp->previousNode != NULL) {
-			tmp->previousNode->nextNode = node2;
-		}
+		printf("Result: %d\n", strcmp(node1->word, node2->word));
 	}
 
-
-
-	printf("\n\ntmp: ");
-	print_node(tmp);
-	printf("node1: ");
-	print_node(node1);
-	printf("node2: ");
-	print_node(node2);
-
-	delete_node(tmp);
-
-/*
-	node1->nextNode = node2->nextNode;
-	if(node2->nextNode != NULL) {
-		node2->nextNode->previousNode = node1;
-	}
-	node1->previousNode = node2->previousNode;
-	if(node2->previousNode != NULL) {
-		node2->previousNode->nextNode = node1;
-	}
-
-	node2->nextNode = tmp->nextNode;
-	if(tmp->nextNode != NULL) {
-		tmp->nextNode->previousNode = node2;
-	}
-	node2->previousNode = tmp->previousNode;
-	if(tmp->previousNode != NULL) {
-		tmp->previousNode->nextNode = node2;
-	}*/
+	return strcmp(node1->word, node2->word);
 }
 
 void delete_node(Node *node){

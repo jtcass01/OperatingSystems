@@ -15,11 +15,17 @@ void dll_insert_tail(DoublyLinkedList *, Node *);
 
 void dll_insert_head(DoublyLinkedList *, Node *);
 
+void dll_delete_node_by_word(DoublyLinkedList *, char *);
+
+Node *dll_find_node_by_word(DoublyLinkedList *, char *);
+
 void dll_swap_nodes(DoublyLinkedList*, Node *, Node *);
 
-void dll_insertion_sort(DoublyLinkedList *doublyList);
+void dll_insertion_sort(DoublyLinkedList *);
 
-void dll_print(DoublyLinkedList *doublyList);
+DoublyLinkedList *dll_merge_lists(DoublyLinkedList *, DoublyLinkedList *);
+
+void dll_print(DoublyLinkedList *);
 
 void dll_destroy(DoublyLinkedList *);
 

@@ -14,8 +14,7 @@
 /* User Created Headers */
 #include "../headers/DoublyLinkedList.h"
 #include "../headers/Node.h"
-
-#define DEBUG 0
+#include "../headers/constants.h"
 
 DoublyLinkedList *dll_create(void){
 	// Dynamically create the DoublyLinkedList structure
@@ -56,19 +55,63 @@ void dll_insert_head(DoublyLinkedList *doublyList, Node *newNode) {
 	}
 }
 
-void dll_swap_nodes(DoublyLinkedList *testList, Node *node1, Node *node2){
+
+void dll_delete_node_by_word(DoublyLinkedList *doublyList, char *word_of_interest) {
+	Node *node_of_interest = dll_find_node_by_word(doublyList, word_of_interest);
+
+	if (node_of_interest->nextNode != NULL && node_of_interest->previousNode != NULL){
+		node_of_interest->nextNode->previousNode = node_of_interest->previousNode;
+		node_of_interest->previousNode->nextNode = node_of_interest->nextNode;
+	} else {
+		if(node_of_interest->nextNode == NULL) {
+			// CASE BOTH NEXT NODE AND PREVIOUS NODE ARE NULL
+			if(node_of_interest->previousNode == NULL) {
+				doublyList->head = NULL;
+				doublyList->tail = NULL;
+			// CASE NEXT NODE IS NULL BUT PREVIOUS NODE IS NOT
+			} else {
+				doublyList->tail = node_of_interest->previousNode;
+				node_of_interest->previousNode->nextNode = NULL;
+			}
+		// CASE PREVIOUS NODE IS NULL BUT NEXT NODE IS NOT
+		} else if(node_of_interest->previousNode == NULL) {
+			doublyList->head = node_of_interest->nextNode;
+			node_of_interest->nextNode->previousNode = NULL;
+		}
+	}
+
+	delete_node(node_of_interest);
+	doublyList->size--;
+}
+
+
+Node *dll_find_node_by_word(DoublyLinkedList *doublyList, char *word_of_interest) {
+	assert(doublyList->head != NULL);
+
+	Node *currentNode = doublyList->head;
+	Node *word_of_interest_holder = create_node(word_of_interest);
+	Node *result = NULL;
+
+	while(currentNode->nextNode != NULL) {
+		if(compare_node_by_word(currentNode, word_of_interest_holder) == 0){
+			result = currentNode;
+			break;
+		}
+		currentNode = currentNode->nextNode;
+	}
+
+	delete_node(word_of_interest_holder);
+
+	return result;
+}
+
+
+void dll_swap_nodes(DoublyLinkedList *doublyList, Node *node1, Node *node2){
 	assert(node1 != node2);
 
 	Node* tmp = create_node("tmp");
 
 	copy_node(tmp, node1);
-
-	printf("\n\ntmp: ");
-	print_node(tmp);
-	printf("node1: ");
-	print_node(node1);
-	printf("node2: ");
-	print_node(node2);
 
 	if (node2->previousNode == node1) {
 		// Move Node 1 to Node 2's place
@@ -124,46 +167,19 @@ void dll_swap_nodes(DoublyLinkedList *testList, Node *node1, Node *node2){
 		}
 	}
 
-
-
-	printf("\n\ntmp: ");
-	print_node(tmp);
-	printf("node1: ");
-	print_node(node1);
-	printf("node2: ");
-	print_node(node2);
-
 	delete_node(tmp);
 
 	if(node1->previousNode == NULL){
-		testList->head = node1;
+		doublyList->head = node1;
 	} else if (node2->previousNode == NULL) {
-		testList->head = node2;
+		doublyList->head = node2;
 	}
 
 	if(node1->nextNode == NULL){
-		testList->tail = node1;
+		doublyList->tail = node1;
 	} else if (node2->nextNode == NULL) {
-		testList->tail = node2;
+		doublyList->tail = node2;
 	}
-/*
-	node1->nextNode = node2->nextNode;
-	if(node2->nextNode != NULL) {
-		node2->nextNode->previousNode = node1;
-	}
-	node1->previousNode = node2->previousNode;
-	if(node2->previousNode != NULL) {
-		node2->previousNode->nextNode = node1;
-	}
-
-	node2->nextNode = tmp->nextNode;
-	if(tmp->nextNode != NULL) {
-		tmp->nextNode->previousNode = node2;
-	}
-	node2->previousNode = tmp->previousNode;
-	if(tmp->previousNode != NULL) {
-		tmp->previousNode->nextNode = node2;
-	}*/
 }
 
 
@@ -176,28 +192,79 @@ void dll_insertion_sort(DoublyLinkedList *doublyList) {
 		Node *placeKeeper = doublyList->head;
 
 		while(placeKeeper->nextNode != NULL){
-			printf("PlaceKeeper: ");
-			print_node(placeKeeper);
+			if (DEBUG) {
+				printf("PlaceKeeper: ");
+				print_node(placeKeeper);
+			}
 
 			while(currentNode->nextNode != NULL) {
-				printf("Current PlaceKeeper comparator: ");
-				print_node(currentNode->nextNode);
-				if(strcmp(currentNode->nextNode->word, minNode->word) < 0) {
-					minNode = currentNode->nextNode;
-					printf("New minNode found: ");
-					print_node(minNode);
+				if (DEBUG) {
+					printf("Current PlaceKeeper comparator: ");
+					print_node(currentNode->nextNode);
 				}
-
+				if(compare_node_by_word(currentNode->nextNode, minNode) < 0) {
+					minNode = currentNode->nextNode;
+					if(DEBUG) {
+						printf("New minNode found: ");
+						print_node(minNode);
+					}
+				}
 				currentNode = currentNode->nextNode;
 			}
 
-			if(strcmp(currentNode->nextNode->word, minNode->word) != 0) {
-				swap_nodes(placeKeeper, minNode);
+			if(DEBUG) {
+				printf("\n\nMade it through the first while loop!\n\n");
+			}
+
+			if(compare_node_by_word(minNode, placeKeeper) < 0) {
+				if(DEBUG) {
+					printf("The placekeeper wasn't the min! Swapping nodes.\n");
+					printf("\tPlaceKeeper: ");
+					print_node(placeKeeper);
+
+					printf("\tminNode: ");
+					print_node(minNode);
+				}
+
+				dll_swap_nodes(doublyList, placeKeeper, minNode);
 
 				placeKeeper = minNode->nextNode;
+
 			} else {
+				if(DEBUG) {
+					printf("No new min was found. iterating the placeKeeper node up one.\n");
+				}
+
 				placeKeeper = placeKeeper->nextNode;
 			}
+			currentNode = placeKeeper;
+			minNode = currentNode;
+		}
+	}
+}
+
+DoublyLinkedList *dll_merge_lists(DoublyLinkedList *doublyList1, DoublyLinkedList *doublyList2) {
+	// Sort the lists
+	dll_insertion_sort(doublyList1);
+	dll_insertion_sort(doublyList2);
+
+	DoublyLinkedList *smaller_list;
+	DoublyLinkedList *longer_list;
+
+	if(doublyList1->size < doublyList2->size) {
+		smaller_list = doublyList1;
+		longer_list = doublyList2;
+	} else {
+		smaller_list = doublyList2;
+		longer_list = doublyList1;
+	}
+
+	Node *small_ptr = smaller_list->head;
+	Node *long_ptr = longer_list->head;
+
+	while(small_ptr->nextNode != NULL) {
+		if(compare_node_by_word(small_ptr, long_ptr) == 0) {
+
 		}
 	}
 }
