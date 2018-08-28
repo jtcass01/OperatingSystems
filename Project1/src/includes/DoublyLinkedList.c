@@ -29,6 +29,21 @@ DoublyLinkedList *dll_create(void){
 	return doublyList;
 }
 
+
+void dll_destroy(DoublyLinkedList *doublyList) {
+	Node *currentNode = doublyList->head;
+	Node *nextNode;
+
+	while(currentNode != NULL){
+		nextNode = currentNode->nextNode;
+		delete_node(currentNode);
+		currentNode = nextNode;
+	}
+
+	free(doublyList);
+}
+
+
 void dll_insert_tail(DoublyLinkedList *doublyList, Node *newNode) {
 	if(doublyList->tail == NULL) {
 		doublyList->head = newNode;
@@ -273,7 +288,7 @@ DoublyLinkedList *dll_merge_lists(DoublyLinkedList *doublyList1, DoublyLinkedLis
 		} else if (compare_node_by_word(small_ptr, long_ptr) < 0) {
 			small_ptr = small_ptr->nextNode;
 
-			dll_delete_node_by_word(small_ptr->previousNode->word);
+			dll_delete_node_by_word(smaller_list, small_ptr->previousNode->word);
 		// CASE Node in smaller list is greather than node in longer list. 
 		} else {
 			long_ptr = long_ptr->nextNode;
@@ -301,17 +316,4 @@ void dll_print(DoublyLinkedList *doublyList) {
 			currentNode = nextNode;
 		}
  	}
-}
-
-void dll_destroy(DoublyLinkedList *doublyList) {
-	Node *currentNode = doublyList->head;
-	Node *nextNode;
-
-	while(currentNode != NULL){
-		nextNode = currentNode->nextNode;
-		delete_node(currentNode);
-		currentNode = nextNode;
-	}
-
-	free(doublyList);
 }

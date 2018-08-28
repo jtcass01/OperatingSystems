@@ -5,7 +5,7 @@
 
 /* Function definitions */
 void dll_test(void) {
-	dll_delete_test();
+	dll_merge_test();
 }
 
 DoublyLinkedList *dll_create_test_list(void) {
@@ -142,5 +142,13 @@ void dll_sort_test(void) {
 }
 
 void dll_merge_test(void) {
+	DoublyLinkedList *testList = dll_create_test_list();
+	DoublyLinkedList *testList2 = dll_create_test_list_3();
+
+	printf("\n\nMergin the lists...\n");
+	DoublyLinkedList *mergedList = dll_merge_lists(testList, testList2);
+	dll_print(mergedList);
+
+	dll_destroy(mergedList);
 
 }

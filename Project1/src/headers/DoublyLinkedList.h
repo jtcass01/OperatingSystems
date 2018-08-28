@@ -11,6 +11,8 @@ typedef struct {
 
 DoublyLinkedList *dll_create(void);
 
+void dll_destroy(DoublyLinkedList *);
+
 void dll_insert_tail(DoublyLinkedList *, Node *);
 
 void dll_insert_head(DoublyLinkedList *, Node *);
@@ -26,7 +28,5 @@ void dll_insertion_sort(DoublyLinkedList *);
 DoublyLinkedList *dll_merge_lists(DoublyLinkedList *, DoublyLinkedList *);
 
 void dll_print(DoublyLinkedList *);
-
-void dll_destroy(DoublyLinkedList *);
 
 #endif
