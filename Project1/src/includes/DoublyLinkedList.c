@@ -92,7 +92,7 @@ Node *dll_find_node_by_word(DoublyLinkedList *doublyList, char *word_of_interest
 	Node *word_of_interest_holder = create_node(word_of_interest);
 	Node *result = NULL;
 
-	while(currentNode->nextNode != NULL) {
+	while(currentNode != NULL) {
 		if(compare_node_by_word(currentNode, word_of_interest_holder) == 0){
 			result = currentNode;
 			break;
@@ -262,11 +262,28 @@ DoublyLinkedList *dll_merge_lists(DoublyLinkedList *doublyList1, DoublyLinkedLis
 	Node *small_ptr = smaller_list->head;
 	Node *long_ptr = longer_list->head;
 
-	while(small_ptr->nextNode != NULL) {
+	while(small_ptr != NULL) {
+		// CASE Nodes in each list are equal.
 		if(compare_node_by_word(small_ptr, long_ptr) == 0) {
+			small_ptr->count += long_ptr->count;
 
+			small_ptr = small_ptr->nextNode;
+			long_ptr = long_ptr->nextNode;
+		// CASE Node in smaller list is less than node in longer list.
+		} else if (compare_node_by_word(small_ptr, long_ptr) < 0) {
+			small_ptr = small_ptr->nextNode;
+
+			dll_delete_node_by_word(small_ptr->previousNode->word);
+		// CASE Node in smaller list is greather than node in longer list. 
+		} else {
+			long_ptr = long_ptr->nextNode;
 		}
+
 	}
+
+	dll_destroy(longer_list);
+
+	return smaller_list;
 }
 
 void dll_print(DoublyLinkedList *doublyList) {

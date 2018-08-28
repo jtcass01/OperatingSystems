@@ -54,6 +54,27 @@ DoublyLinkedList *dll_create_test_list_2(void) {
 	return testList;
 }
 
+DoublyLinkedList *dll_create_test_list_3(void) {
+	DoublyLinkedList *testList = dll_create();
+
+	if(testList == NULL) {
+		printf("Unable to allocate memory for a test list.");
+	} else {
+		dll_print(testList);		
+	}
+
+	printf("Creating a testList with nodes \"Hello World What's Up?\"...\n");
+	Node* tmp = create_node("Up?");
+	dll_insert_tail(testList, tmp);
+	tmp = create_node("What's");
+	dll_insert_head(testList, tmp);
+	tmp = create_node("Sunny");
+	dll_insert_tail(testList, tmp);
+	dll_print(testList);
+
+	return testList;
+}
+
 void dll_insert_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 
@@ -63,11 +84,13 @@ void dll_insert_test(void) {
 void dll_delete_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 
+	dll_insertion_sort(testList);
+
 	printf("\n\nDeleting nodes...\n");
 	dll_delete_node_by_word(testList, "World");
 	dll_delete_node_by_word(testList, "Hello");
-//	dll_delete_node_by_word(testList, "What's");
-//	dll_delete_node_by_word(testList, "Up?");
+	dll_delete_node_by_word(testList, "What's");
+	dll_delete_node_by_word(testList, "Up?");
 	dll_print(testList);
 
 	dll_destroy(testList);
@@ -116,4 +139,8 @@ void dll_sort_test(void) {
 
 	dll_destroy(testList);
 	dll_destroy(testList2);
+}
+
+void dll_merge_test(void) {
+
 }
