@@ -10,10 +10,7 @@
 /* User Created Headers */
 #include "headers/NodeTest.h"
 #include "headers/DoublyLinkedListTest.h"
-
-
-/* Constants */
-#define TEST_LIST_SIZE 10
+#include "headers/FileParserTest.h"
 
 /* Function prototypes */
 void printArray(int *, int);
@@ -21,7 +18,7 @@ void printArray(int *, int);
 
 /* Main function */
 int main(int argc, char *argv[]) {
-	dll_test();
+	test_parse_file();
 }
 
 

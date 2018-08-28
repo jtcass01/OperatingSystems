@@ -13,8 +13,6 @@
 
 /* User Created Headers */
 #include "../headers/DoublyLinkedList.h"
-#include "../headers/Node.h"
-#include "../headers/constants.h"
 
 DoublyLinkedList *dll_create(void){
 	// Dynamically create the DoublyLinkedList structure
@@ -52,6 +50,7 @@ void dll_insert_tail(DoublyLinkedList *doublyList, Node *newNode) {
 	} else {
 		doublyList->tail->nextNode = newNode;
 		newNode->previousNode = doublyList->tail;
+		newNode->nextNode = NULL;
 		doublyList->tail = newNode;
 		doublyList->size++;
 	}
@@ -65,6 +64,7 @@ void dll_insert_head(DoublyLinkedList *doublyList, Node *newNode) {
 	} else {
 		doublyList->head->previousNode = newNode;
 		newNode->nextNode = doublyList->head;
+		newNode->previousNode = NULL;
 		doublyList->head = newNode;
 		doublyList->size++;
 	}
@@ -299,6 +299,51 @@ DoublyLinkedList *dll_merge_lists(DoublyLinkedList *doublyList1, DoublyLinkedLis
 	dll_destroy(longer_list);
 
 	return smaller_list;
+}
+
+DoublyLinkedList *dll_merge_lists_c(DoublyLinkedList *doublyList1, DoublyLinkedList *doublyList2) {
+	DoublyLinkedList *merged_list = dll_create();
+
+	// Sort the lists
+	dll_insertion_sort(doublyList1);
+	dll_insertion_sort(doublyList2);
+
+	DoublyLinkedList *smaller_list;
+	DoublyLinkedList *longer_list;
+
+	if(doublyList1->size < doublyList2->size) {
+		smaller_list = doublyList1;
+		longer_list = doublyList2;
+	} else {
+		smaller_list = doublyList2;
+		longer_list = doublyList1;
+	}
+
+	Node *small_ptr = smaller_list->head;
+	Node *long_ptr = longer_list->head;
+	Node *matching_node = create_node("tmp");
+
+	while(small_ptr != NULL) {
+		// CASE Nodes in each list are equal.
+		if(compare_node_by_word(small_ptr, long_ptr) == 0) {
+			copy_node(matching_node, small_ptr);
+			matching_node->count += long_ptr->count;
+			print_node(matching_node);
+			dll_insert_tail(merged_list, matching_node);
+
+			small_ptr = small_ptr->nextNode;
+			long_ptr = long_ptr->nextNode;
+		// CASE Node in smaller list is less than node in longer list.
+		} else if (compare_node_by_word(small_ptr, long_ptr) < 0) {
+			small_ptr = small_ptr->nextNode;
+		// CASE Node in smaller list is greather than node in longer list. 
+		} else {
+			long_ptr = long_ptr->nextNode;
+		}
+
+	}
+
+	return merged_list;
 }
 
 void dll_print(DoublyLinkedList *doublyList) {

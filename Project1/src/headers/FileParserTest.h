@@ -1,11 +1,11 @@
-#ifndef FILE_PARSER
-#define FILE_PARSER
+#ifndef FILE_PARSER_TEST
+#define FILE_PARSER_TEST
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "DoublyLinkedList.h"
 
-DoublyLinkedList *parse_file(char *);
+void test_parse_file(void);
 
 #endif

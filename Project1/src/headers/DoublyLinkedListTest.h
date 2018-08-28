@@ -24,4 +24,7 @@ void dll_sort_test(void);
 
 void dll_merge_test(void);
 
+void dll_merge_test_1(void);
+
+void dll_merge_test_2(void);
 #endif

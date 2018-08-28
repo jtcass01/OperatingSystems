@@ -1,0 +1,16 @@
+1,2
+10019,2
+DRAFT,2
+GODFATHER,2
+Gulf,2
+New,4
+PARAMOUNT,2
+PICTURES,2
+Plaza,2
+Screenplay,2
+THE,5
+Western,2
+York,2
+York,,2
+and,4
+by,2

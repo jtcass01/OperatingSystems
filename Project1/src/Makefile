@@ -8,7 +8,8 @@ CFLAGS = -Wall -g
 LIBS = -lm
 
 # source files
-SRCS = includes/DoublyLinkedList.c includes/Node.c tests/NodeTest.c tests/DoublyLinkedListTest.c test.c
+SRCS = includes/DoublyLinkedList.c includes/Node.c includes/FileParser.c tests/FileParserTest.c tests/NodeTest.c tests/DoublyLinkedListTest.c test.c
+
 # object files
 OBJS = $(SRCS:.c=.o)
 

@@ -2,6 +2,7 @@
 #define DOUBLY_LINKED_LIST
 
 #include "Node.h"
+#include "constants.h"
 
 typedef struct {
 	Node *head;
@@ -26,6 +27,8 @@ void dll_swap_nodes(DoublyLinkedList*, Node *, Node *);
 void dll_insertion_sort(DoublyLinkedList *);
 
 DoublyLinkedList *dll_merge_lists(DoublyLinkedList *, DoublyLinkedList *);
+
+DoublyLinkedList *dll_merge_lists_c(DoublyLinkedList *, DoublyLinkedList *);
 
 void dll_print(DoublyLinkedList *);
 
