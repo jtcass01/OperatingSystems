@@ -26,9 +26,7 @@ void dll_swap_nodes(DoublyLinkedList*, Node *, Node *);
 
 void dll_insertion_sort(DoublyLinkedList *);
 
-DoublyLinkedList *dll_merge_lists(DoublyLinkedList *, DoublyLinkedList *);
-
-DoublyLinkedList *dll_merge_lists_c(DoublyLinkedList *, DoublyLinkedList *);
+DoublyLinkedList *dll_merge_lists(DoublyLinkedList *, DoublyLinkedList *, DoublyLinkedList *);
 
 void dll_print(DoublyLinkedList *);
 

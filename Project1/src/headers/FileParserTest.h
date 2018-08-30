@@ -6,6 +6,8 @@
 
 #include "DoublyLinkedList.h"
 
+void test_parse_and_merge_files(void);
+
 void test_parse_file(void);
 
 #endif

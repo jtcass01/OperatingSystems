@@ -142,30 +142,15 @@ void dll_sort_test(void) {
 }
 
 void dll_merge_test(void) {
-//	dll_merge_test_1();
-	dll_merge_test_2();
-}
-
-void dll_merge_test_1(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 	DoublyLinkedList *testList2 = dll_create_test_list_3();
+	DoublyLinkedList *merged_list = dll_create();
 
 	printf("\n\nMergin the lists...\n");
-	DoublyLinkedList *mergedList = dll_merge_lists(testList, testList2);
-	dll_print(mergedList);
-
-	dll_destroy(mergedList);
-}
-
-void dll_merge_test_2(void) {
-	DoublyLinkedList *testList = dll_create_test_list();
-	DoublyLinkedList *testList2 = dll_create_test_list_3();
-
-	printf("\n\nMergin the lists...\n");
-	DoublyLinkedList *mergedList = dll_merge_lists_c(testList, testList2);
-	dll_print(mergedList);
+	dll_merge_lists(merged_list, testList, testList2);
+	dll_print(merged_list);
 
 	dll_destroy(testList);
 	dll_destroy(testList2);
-	dll_destroy(mergedList);
+	dll_destroy(merged_list);
 }
