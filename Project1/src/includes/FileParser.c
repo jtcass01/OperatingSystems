@@ -1,4 +1,11 @@
+/*
+** File:         test.c
+** Author:       Jacob Taylor Cassady
+** Description:  
+** Last Updated: 8/22/18
+*/
 
+/* User Created Headers */
 #include "../headers/FileParser.h"
 
 void parse_and_merge_files(char *file1_path, char *file2_path) {
@@ -19,7 +26,9 @@ void parse_and_merge_files(char *file1_path, char *file2_path) {
 	}
 	DoublyLinkedList *merged_list = dll_create();
 	dll_merge_lists(merged_list, file1_list, file2_list);
+
 	dll_print(merged_list);
+	//continue from here.
 
 	dll_destroy(file1_list);
 	dll_destroy(file2_list);

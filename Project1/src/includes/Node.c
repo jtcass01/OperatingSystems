@@ -5,13 +5,7 @@
 ** Last Updated: 8/22/18
 */
 
-/* Compiler/OS Headers */
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-/* User Created Headers */
 #include "../headers/Node.h"
-#include "../headers/constants.h"
 
 Node *create_node(char *string){
 	Node *newNode = malloc(sizeof(Node));
@@ -24,6 +18,13 @@ Node *create_node(char *string){
 	return newNode;
 }
 
+
+void delete_node(Node *node){
+	free(node->word);
+	free(node);
+}
+
+
 void print_node(Node *node){
 	if(node == NULL) {
 		printf("This is a NULL node.  Cannot print.\n");
@@ -32,12 +33,14 @@ void print_node(Node *node){
 	}
 }
 
+
 void copy_node(Node *destination, Node *source) {
 	strcpy(destination->word, source->word);
 	destination->count = source->count;
 	destination->nextNode = source->nextNode;
 	destination->previousNode = source->previousNode;
 }
+
 
 int compare_node_by_word(Node *node1, Node *node2) {
 	if (DEBUG) {
@@ -54,7 +57,8 @@ int compare_node_by_word(Node *node1, Node *node2) {
 	return strcmp(node1->word, node2->word);
 }
 
-void delete_node(Node *node){
-	free(node->word);
-	free(node);
+
+void log_node(Node *node, FILE *log_file) {
+	fprintf(log_file, "%s,%d", node->word, node->count);
 }
+

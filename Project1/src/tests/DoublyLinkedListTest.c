@@ -154,3 +154,16 @@ void dll_merge_test(void) {
 	dll_destroy(testList2);
 	dll_destroy(merged_list);
 }
+
+void dll_log_test(char *log_destination) {
+	DoublyLinkedList *testList = dll_create_test_list();
+
+	printf("\n\nSorting the list...\n");
+	dll_insertion_sort(testList);
+	dll_print(testList);
+
+	printf("\n\nStoring the list...\n");
+	dll_log(testList, log_destination);
+
+	dll_destroy(testList);
+}

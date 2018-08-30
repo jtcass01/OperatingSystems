@@ -18,7 +18,7 @@ void printArray(int *, int);
 
 /* Main function */
 int main(int argc, char *argv[]) {
-	test_parse_and_merge_files();
+	dll_log_test("/home/durzo/Programming/OperatingSystems/Project1/out_test.txt");
 }
 
 
