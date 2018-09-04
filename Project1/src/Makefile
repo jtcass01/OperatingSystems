@@ -7,12 +7,17 @@ CFLAGS = -Wall -g
 # libs
 LIBS = -lm
 
-# source files
+# source files DEPLOYMENT
+# SRCS = includes/DoublyLinkedList.c includes/Node.c includes/FileParser.c common.c
+# source files TEST
 SRCS = includes/DoublyLinkedList.c includes/Node.c includes/FileParser.c tests/FileParserTest.c tests/NodeTest.c tests/DoublyLinkedListTest.c test.c
 
 # object files
 OBJS = $(SRCS:.c=.o)
 
+# target DEPLOYMENT
+# TARG = common
+# target TEST
 TARG = test
 
 all: $(TARG)

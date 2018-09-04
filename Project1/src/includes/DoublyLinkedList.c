@@ -1,8 +1,7 @@
 /*
-** File:         test.c
+** File:         DoublyLinkedList.c
 ** Author:       Jacob Taylor Cassady
 ** Description:  
-** Last Updated: 8/22/18
 */
 
 /* User Created Headers */
@@ -15,13 +14,29 @@ DoublyLinkedList *dll_create(void){
 	** description: Dynamically allocates memory for a DoublyLinkedList, initializes the list's
 	**				attributes and returns a pointer to the struct.
 	*/
+	#if DEBUG
+		printf("Allocating memory for a DoublyLinkedList...\n");
+	#endif
+
 	// Dynamically create the DoublyLinkedList structure
 	DoublyLinkedList *doublyList = malloc(sizeof(DoublyLinkedList));
+
+	if(doublyList == NULL) {
+		printf("Unable to allocate memory for DoublyLinkedList.\n");
+	} else {
+		#if DEBUG
+			printf("Successfully Allocated memory for a DoublyLinkedList.  Initializing attributes...\n");
+		#endif
+	}
 
 	// Initiate the attributes.
 	doublyList->head = NULL;
 	doublyList->tail = NULL;
 	doublyList->size = 0;
+
+	#if DEBUG
+		printf("DoublyLinkedList successfully allocated and intitialized.  Returning...\n");
+	#endif
 
 	// Return the DoublyLinkedList structure
 	return doublyList;
@@ -242,48 +257,48 @@ void dll_insertion_sort(DoublyLinkedList *doublyList) {
 		Node *placeKeeper = doublyList->head;
 
 		while(placeKeeper->nextNode != NULL){
-			if (DEBUG) {
+			#if DEBUG
 				printf("PlaceKeeper: ");
 				print_node(placeKeeper);
-			}
+			#endif
 
 			while(currentNode->nextNode != NULL) {
-				if (DEBUG) {
+				#if DEBUG
 					printf("Current PlaceKeeper comparator: ");
 					print_node(currentNode->nextNode);
-				}
+				#endif
 				if(compare_node_by_word(currentNode->nextNode, minNode) < 0) {
 					minNode = currentNode->nextNode;
-					if(DEBUG) {
+					#if DEBUG
 						printf("New minNode found: ");
 						print_node(minNode);
-					}
+					#endif
 				}
 				currentNode = currentNode->nextNode;
 			}
 
-			if(DEBUG) {
+			#if DEBUG
 				printf("\n\nMade it through the first while loop!\n\n");
-			}
+			#endif
 
 			if(compare_node_by_word(minNode, placeKeeper) < 0) {
-				if(DEBUG) {
+				#if DEBUG
 					printf("The placekeeper wasn't the min! Swapping nodes.\n");
 					printf("\tPlaceKeeper: ");
 					print_node(placeKeeper);
 
 					printf("\tminNode: ");
 					print_node(minNode);
-				}
+				#endif
 
 				dll_swap_nodes(doublyList, placeKeeper, minNode);
 
 				placeKeeper = minNode->nextNode;
 
 			} else {
-				if(DEBUG) {
+				#if DEBUG
 					printf("No new min was found. iterating the placeKeeper node up one.\n");
-				}
+				#endif
 
 				placeKeeper = placeKeeper->nextNode;
 			}
@@ -314,35 +329,35 @@ DoublyLinkedList *dll_merge_lists(DoublyLinkedList *merged_list, DoublyLinkedLis
 		longer_list = doublyList1;
 	}
 
-	if (DEBUG) {
+	#if DEBUG
 		printf("Smaller List: ");
 		dll_print(smaller_list);
 		printf("Longer List: ");
 		dll_print(longer_list);
 		printf("Merged List: ");
 		dll_print(merged_list);
-	}
+	#endif
 
 	Node *small_ptr = smaller_list->head;
 	Node *long_ptr = longer_list->head;
 
-	while(small_ptr != NULL) {
+	while(small_ptr != NULL && long_ptr != NULL) {
 		// CASE Nodes in each list are equal.
 		if(compare_node_by_word(small_ptr, long_ptr) == 0) {
 			Node *matching_node = create_node("tmp");
 			copy_node(matching_node, small_ptr);
 			matching_node->count += long_ptr->count;
 
-			if (DEBUG) {
+			#if DEBUG
 				printf("\n\n!!! MATCHING NODE FOUND!!! ");
 				print_node(matching_node);
-			}
+			#endif
 			dll_insert_tail(merged_list, matching_node);
 
-			if (DEBUG) {
+			#if DEBUG
 				printf("Updated Merged List: ");
 				dll_print(merged_list);
-			}
+			#endif
 
 			small_ptr = small_ptr->nextNode;
 			long_ptr = long_ptr->nextNode;
@@ -371,12 +386,10 @@ void dll_print(DoublyLinkedList *doublyList) {
  		printf("This list is empty. It's head is NULL.\n");
  	} else {
 	 	Node *currentNode = doublyList->head;
-		Node *nextNode;
 
 		while(currentNode != NULL){
-			nextNode = currentNode->nextNode;
 			print_node(currentNode);
-			currentNode = nextNode;
+			currentNode = currentNode->nextNode;
 		}
  	}
 }
@@ -399,10 +412,7 @@ void dll_log(DoublyLinkedList *doublyList, char *log_destination) {
 			nextNode = currentNode->nextNode;
 
 			log_node(currentNode, log);
-
-			if(currentNode->nextNode != NULL) {
-				fprintf(log, "\n");
-			}
+			fprintf(log, "\n");
 
 			currentNode = nextNode;
 		}

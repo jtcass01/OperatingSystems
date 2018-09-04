@@ -1,8 +1,9 @@
+/* User Created Headers */
+#include "FileParserTest.h"
 
-#include "../headers/FileParser.h"
-
-void test_parse_and_merge_files(void) {
-	parse_and_merge_files("/home/durzo/Programming/OperatingSystems/Project1/src/tests/test_files/test_1/in1.txt", "/home/durzo/Programming/OperatingSystems/Project1/src/tests/test_files/test_1/in2.txt");
+/* Function Defintions */
+void test_parse_merge_log_files(void) {
+	parse_and_merge_files("/home/durzo/Programming/OperatingSystems/Project1/src/tests/test_files/test_1/in1.txt", "/home/durzo/Programming/OperatingSystems/Project1/src/tests/test_files/test_1/in2.txt", "/home/durzo/Programming/OperatingSystems/Project1/src/tests/test_files/test_1/out_test.txt");
 }
 
 void test_parse_file(void) {

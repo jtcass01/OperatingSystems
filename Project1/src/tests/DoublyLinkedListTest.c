@@ -1,13 +1,14 @@
+/* Compiler/OS Headers */
 #include <stdio.h>
-
-#include "../headers/DoublyLinkedList.h"
-#include "../headers/DoublyLinkedListTest.h"
+/* User Created Headers */
+#include "DoublyLinkedListTest.h"
 
 /* Function definitions */
 void dll_test(void) {
 	dll_merge_test();
 }
 
+// PASS VALGRIND
 DoublyLinkedList *dll_create_test_list(void) {
 	DoublyLinkedList *testList = dll_create();
 
@@ -75,16 +76,16 @@ DoublyLinkedList *dll_create_test_list_3(void) {
 	return testList;
 }
 
+// PASS VALGRIND
 void dll_insert_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 
 	dll_destroy(testList);
 }
 
+// PASSED VALGRIND
 void dll_delete_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
-
-	dll_insertion_sort(testList);
 
 	printf("\n\nDeleting nodes...\n");
 	dll_delete_node_by_word(testList, "World");
@@ -96,21 +97,22 @@ void dll_delete_test(void) {
 	dll_destroy(testList);
 }
 
+// PASSED VALGRIND
 void dll_swap_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 
 	printf("\n\nSwapping the second and third nodes in the testList\n");
-	//Swap the second and third nodes in the list.
-	dll_swap_nodes(testList, testList->head->nextNode->nextNode, testList->head->nextNode);
+	dll_swap_nodes(testList, testList->head->nextNode, testList->tail->previousNode);
 	dll_print(testList);
 
-	printf("Swapping the first and forth nodes in the testList\n");
-	dll_swap_nodes(testList, testList->head, testList->head->nextNode->nextNode->nextNode);
+	printf("Swapping the first and last nodes in the testList\n");
+	dll_swap_nodes(testList, testList->head, testList->tail);
 	dll_print(testList);
 
 	dll_destroy(testList);
 }
 
+// PASSED VALGRIND
 void dll_find_node_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 
@@ -125,6 +127,7 @@ void dll_find_node_test(void) {
 	dll_destroy(testList);
 }
 
+// PASSED VALGRIND
 void dll_sort_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 
@@ -141,6 +144,7 @@ void dll_sort_test(void) {
 	dll_destroy(testList2);
 }
 
+// PASSED VALGRIND
 void dll_merge_test(void) {
 	DoublyLinkedList *testList = dll_create_test_list();
 	DoublyLinkedList *testList2 = dll_create_test_list_3();

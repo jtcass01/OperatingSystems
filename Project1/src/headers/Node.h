@@ -19,6 +19,8 @@ typedef struct NodeT {
 
 Node* create_node(char *);
 
+Node *create_node_from_buffer(char *, int );
+
 void delete_node(Node *);
 
 void print_node(Node *);

@@ -19,6 +19,17 @@ Node *create_node(char *string){
 }
 
 
+Node *create_node_from_buffer(char *buffer, int char_count) {
+	Node *newNode = malloc(sizeof(Node));
+
+	newNode->word = strndup(buffer, char_count);
+	newNode->count = 1;
+	newNode->nextNode = NULL;
+	newNode->previousNode = NULL;
+
+	return newNode;
+}
+
 void delete_node(Node *node){
 	free(node->word);
 	free(node);
@@ -35,7 +46,8 @@ void print_node(Node *node){
 
 
 void copy_node(Node *destination, Node *source) {
-	strcpy(destination->word, source->word);
+	free(destination->word);
+	destination->word = strdup(source->word);
 	destination->count = source->count;
 	destination->nextNode = source->nextNode;
 	destination->previousNode = source->previousNode;
@@ -43,7 +55,7 @@ void copy_node(Node *destination, Node *source) {
 
 
 int compare_node_by_word(Node *node1, Node *node2) {
-	if (DEBUG) {
+	#if DEBUG
 		printf("\nComparing nodes by word...\n");
 		printf("Node1: ");
 		print_node(node1);
@@ -52,7 +64,7 @@ int compare_node_by_word(Node *node1, Node *node2) {
 		print_node(node2);
 
 		printf("Result: %d\n", strcmp(node1->word, node2->word));
-	}
+	#endif
 
 	return strcmp(node1->word, node2->word);
 }

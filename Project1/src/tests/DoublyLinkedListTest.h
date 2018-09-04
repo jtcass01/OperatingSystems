@@ -1,7 +1,8 @@
 #ifndef DOUBLY_LINKED_LIST_TEST
 #define DOUBLY_LINKED_LIST_TEST
 
-#include "DoublyLinkedList.h"
+/* User Created Headers */
+#include "../headers/DoublyLinkedList.h"
 
 /* Function prototypes */
 void dll_test(void);
