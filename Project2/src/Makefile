@@ -8,7 +8,7 @@ CFLAGS = -Wall -g
 LIBS = -lm
 
 # source files DEPLOYMENT
-SRCS = includes/DoublyLinkedList.c includes/Node.c includes/FileParser.c sched.c
+SRCS = includes/Process.c includes/FileParser.c includes/DoublyLinkedList.c includes/SchedulingAlgorithms.c sched.c
 
 # object files
 OBJS = $(SRCS:.c=.o)

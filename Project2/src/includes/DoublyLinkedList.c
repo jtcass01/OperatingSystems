@@ -47,371 +47,497 @@ void dll_destroy(DoublyLinkedList *doublyList) {
 	/*
 	** function:    dll_destroy
 	** author:      Jacob Taylor Cassady
-	** description: Dynamically deallocates memory stored within a DoublyLinkedList and each of it's nodes.
+	** description: Dynamically deallocates memory stored within a DoublyLinkedList and each of it's processes.
 	*/
-	Node *currentNode = doublyList->head;
-	Node *nextNode;
+	Process *currentProcess = doublyList->head;
+	Process *nextProcess;
 
-	while(currentNode != NULL){
-		nextNode = currentNode->nextNode;
-		delete_node(currentNode);
-		currentNode = nextNode;
+	while(currentProcess != NULL){
+		nextProcess = currentProcess->nextProcess;
+		delete_process(currentProcess);
+		currentProcess = nextProcess;
 	}
 
 	free(doublyList);
 }
 
 
-void dll_insert_tail(DoublyLinkedList *doublyList, Node *newNode) {
+void dll_insert_tail(DoublyLinkedList *doublyList, Process *newProcess) {
 	/*
 	** function:    dll_insert_tail
 	** author:      Jacob Taylor Cassady
-	** description: Inserts a node into the tail end of a DoublyLinkedList.
+	** description: Inserts a process into the tail end of a DoublyLinkedList.
 	*/
 	if(doublyList->tail == NULL) {
-		doublyList->head = newNode;
-		doublyList->tail = newNode;
+		doublyList->head = newProcess;
+		doublyList->tail = newProcess;
+		newProcess->nextProcess = NULL;
+		newProcess->previousProcess = NULL;
 		doublyList->size = 1;
 	} else {
-		doublyList->tail->nextNode = newNode;
-		newNode->previousNode = doublyList->tail;
-		newNode->nextNode = NULL;
-		doublyList->tail = newNode;
+		doublyList->tail->nextProcess = newProcess;
+		newProcess->previousProcess = doublyList->tail;
+		newProcess->nextProcess = NULL;
+		doublyList->tail = newProcess;
 		doublyList->size++;
 	}
 }
 
-void dll_insert_head(DoublyLinkedList *doublyList, Node *newNode) {
+void dll_insert_head(DoublyLinkedList *doublyList, Process *newProcess) {
 	/*
 	** function:    dll_insert_head
 	** author:      Jacob Taylor Cassady
-	** description: Inserts a node into the head end of a DoublyLinkedList.
+	** description: Inserts a process into the head end of a DoublyLinkedList.
 	*/
 	if(doublyList->head == NULL) {
-		doublyList->head = newNode;
-		doublyList->tail = newNode;
+		doublyList->head = newProcess;
+		doublyList->tail = newProcess;
+		newProcess->nextProcess = NULL;
+		newProcess->previousProcess = NULL;
 		doublyList->size = 1;
 	} else {
-		doublyList->head->previousNode = newNode;
-		newNode->nextNode = doublyList->head;
-		newNode->previousNode = NULL;
-		doublyList->head = newNode;
+		doublyList->head->previousProcess = newProcess;
+		newProcess->nextProcess = doublyList->head;
+		newProcess->previousProcess = NULL;
+		doublyList->head = newProcess;
 		doublyList->size++;
 	}
 }
 
-
-void dll_delete_node_by_word(DoublyLinkedList *doublyList, char *word_of_interest) {
+void dll_snip(DoublyLinkedList *doublyList, int new_size) {
 	/*
-	** function:    dll_delete_node_by_word
+	** function:    dll_snip
 	** author:      Jacob Taylor Cassady
-	** description: Searches for a Node within a DoublyLinkedList using a word identifier and deletes it if found.
+	** description: Curtails a DoublyLinkedList to a specific size.
 	*/
-	Node *node_of_interest = dll_find_node_by_word(doublyList, word_of_interest);
+	if ( doublyList->size > 0 ) {
+		DoublyLinkedList *remainder = dll_create();
+		Process *currentProcess = doublyList->head;
+		int process_index = 0;
 
-	if(node_of_interest != NULL) {
-		if (node_of_interest->nextNode != NULL && node_of_interest->previousNode != NULL){
-			node_of_interest->nextNode->previousNode = node_of_interest->previousNode;
-			node_of_interest->previousNode->nextNode = node_of_interest->nextNode;
+		while(currentProcess != NULL && process_index < new_size){ 
+			currentProcess = currentProcess->nextProcess;
+			process_index++;
+		}
+
+		if (currentProcess != NULL) {
+			remainder->head = currentProcess;
+			remainder->size = doublyList->size - new_size;
+
+			currentProcess->previousProcess->nextProcess = NULL;
+			doublyList->size = new_size;
+		}
+
+
+		dll_destroy(remainder);		
+	}
+}
+
+
+void dll_delete_process_by_id(DoublyLinkedList *doublyList, int pid_of_interest) {
+	/*
+	** function:    dll_delete_process_by_id
+	** author:      Jacob Taylor Cassady
+	** description: Searches for a Process within a DoublyLinkedList using a pid identifier and deletes it if found.
+	*/
+	Process *process_of_interest = dll_find_process_by_id(doublyList, pid_of_interest);
+
+	if(process_of_interest != NULL) {
+		if (process_of_interest->nextProcess != NULL && process_of_interest->previousProcess != NULL){
+			process_of_interest->nextProcess->previousProcess = process_of_interest->previousProcess;
+			process_of_interest->previousProcess->nextProcess = process_of_interest->nextProcess;
 		} else {
-			if(node_of_interest->nextNode == NULL) {
-				// CASE BOTH NEXT NODE AND PREVIOUS NODE ARE NULL
-				if(node_of_interest->previousNode == NULL) {
+			if(process_of_interest->nextProcess == NULL) {
+				// CASE BOTH NEXT PROCESS AND PREVIOUS PROCESS ARE NULL
+				if(process_of_interest->previousProcess == NULL) {
 					doublyList->head = NULL;
 					doublyList->tail = NULL;
-				// CASE NEXT NODE IS NULL BUT PREVIOUS NODE IS NOT
+				// CASE NEXT PROCESS IS NULL BUT PREVIOUS PROCESS IS NOT
 				} else {
-					doublyList->tail = node_of_interest->previousNode;
-					node_of_interest->previousNode->nextNode = NULL;
+					doublyList->tail = process_of_interest->previousProcess;
+					process_of_interest->previousProcess->nextProcess = NULL;
 				}
-			// CASE PREVIOUS NODE IS NULL BUT NEXT NODE IS NOT
-			} else if(node_of_interest->previousNode == NULL) {
-				doublyList->head = node_of_interest->nextNode;
-				node_of_interest->nextNode->previousNode = NULL;
+			// CASE PREVIOUS PROCESS IS NULL BUT NEXT PROCESS IS NOT
+			} else if(process_of_interest->previousProcess == NULL) {
+				doublyList->head = process_of_interest->nextProcess;
+				process_of_interest->nextProcess->previousProcess = NULL;
 			}
 		}
 
-		delete_node(node_of_interest);
+		delete_process(process_of_interest);
 		doublyList->size--;
 	}
 }
 
 
-Node *dll_find_node_by_word(DoublyLinkedList *doublyList, char *word_of_interest) {
+Process *dll_find_process_by_id(DoublyLinkedList *doublyList, int pid_of_interest) {
 	/*
-	** function:    dll_find_node_by_word
+	** function:    dll_find_process_by_id
 	** author:      Jacob Taylor Cassady
-	** description: Searches for a Node within a DoublyLinkedList using a word identifier.
+	** description: Searches for a Process within a DoublyLinkedList using a word identifier.
 	*/
-	Node *currentNode = doublyList->head;
-	Node *word_of_interest_holder = create_node(word_of_interest);
-	Node *result = NULL;
+	Process *currentProcess = doublyList->head;
+	Process *pid_of_interest_holder = create_process(pid_of_interest, 0, 0, 0);
+	Process *result = NULL;
 
-	while(currentNode != NULL) {
-		if(compare_node_by_word(currentNode, word_of_interest_holder) == 0){
-			result = currentNode;
+	while(currentProcess != NULL) {
+		if(compare_process_by_pid(currentProcess, pid_of_interest_holder) == 0){
+			result = currentProcess;
 			break;
 		}
-		currentNode = currentNode->nextNode;
+		currentProcess = currentProcess->nextProcess;
 	}
 
-	delete_node(word_of_interest_holder);
+	delete_process(pid_of_interest_holder);
 
 	return result;
 }
 
 
-void dll_swap_nodes(DoublyLinkedList *doublyList, Node *node1, Node *node2){
+Process *dll_find_minimum_process(DoublyLinkedList *doublyList, char *parameter) {
+	Process *minimumProcess = doublyList->head;
+	Process *currentProcess = doublyList->head;
+
+	if(strcmp(parameter, "priority") == 0) {
+		while(currentProcess != NULL) {
+			if(currentProcess->priority < minimumProcess->priority) {
+				minimumProcess = currentProcess;
+			} else if (currentProcess->priority == minimumProcess->priority ) {
+				if (currentProcess->arrival_time < minimumProcess->arrival_time) {
+					minimumProcess = currentProcess;
+				}
+			}
+
+			currentProcess = currentProcess->nextProcess;
+		}
+	}
+
+
+	return minimumProcess;
+}
+
+
+void dll_swap_processes(DoublyLinkedList *doublyList, Process *process1, Process *process2){
 	/*
-	** function:    dll_swap_nodes
+	** function:    dll_swap_processes
 	** author:      Jacob Taylor Cassady
-	** description: Swaps two nodes.
+	** description: Swaps two processes.
 	*/
-	assert(node1 != node2);
+	assert(process1 != process2);
 
-	Node* tmp = create_node("tmp");
+	Process* tmp = create_process(0, 0, 0, 0);
 
-	copy_node(tmp, node1);
+	copy_process(tmp, process1);
 
-	if (node2->previousNode == node1) {
-		// Move Node 1 to Node 2's place
-		if(node2->nextNode != NULL) {
-			node2->nextNode->previousNode = node1;
+	if (process2->previousProcess == process1) {
+		// Move Process 1 to Process 2's place
+		if(process2->nextProcess != NULL) {
+			process2->nextProcess->previousProcess = process1;
 		}
 
-		node1->nextNode = node2->nextNode;
-		node1->previousNode = node2;
+		process1->nextProcess = process2->nextProcess;
+		process1->previousProcess = process2;
 
-		// Move Node 2 to Node 1's place
-		if(tmp->previousNode != NULL) {
-			tmp->previousNode->nextNode = node2;
+		// Move Process 2 to Process 1's place
+		if(tmp->previousProcess != NULL) {
+			tmp->previousProcess->nextProcess = process2;
 		}
 
-		node2->previousNode = tmp->previousNode;
-		node2->nextNode = node1;
-	} else if (node2->nextNode == node1) {
-		// Move Node 1 to Node 2's place
-		if(node2->previousNode != NULL) {
-			node2->previousNode->nextNode = node1;				
+		process2->previousProcess = tmp->previousProcess;
+		process2->nextProcess = process1;
+	} else if (process2->nextProcess == process1) {
+		// Move Process 1 to Process 2's place
+		if(process2->previousProcess != NULL) {
+			process2->previousProcess->nextProcess = process1;				
 		}
 
-		node1->nextNode = node2;
-		node1->previousNode = node2->previousNode;
+		process1->nextProcess = process2;
+		process1->previousProcess = process2->previousProcess;
 
-		// Move Node 2 to Node 1's place
-		if(tmp->nextNode != NULL) {
-			tmp->nextNode->previousNode = node2;
+		// Move Process 2 to Process 1's place
+		if(tmp->nextProcess != NULL) {
+			tmp->nextProcess->previousProcess = process2;
 		}
 
-		node2->nextNode = tmp->nextNode;
-		node2->previousNode = node1;
+		process2->nextProcess = tmp->nextProcess;
+		process2->previousProcess = process1;
 	} else {
-		// Move Node 1 to Node 2's place
-		if(node2->previousNode != NULL) {
-			node2->previousNode->nextNode = node1;				
+		// Move Process 1 to Process 2's place
+		if(process2->previousProcess != NULL) {
+			process2->previousProcess->nextProcess = process1;				
 		}
-		if(node2->nextNode != NULL) {
-			node2->nextNode->previousNode = node1;
+		if(process2->nextProcess != NULL) {
+			process2->nextProcess->previousProcess = process1;
 		}
-		node1->nextNode = node2->nextNode;
-		node1->previousNode = node2->previousNode;
+		process1->nextProcess = process2->nextProcess;
+		process1->previousProcess = process2->previousProcess;
 
-		// Move Node 2 to Node 1's place
-		node2->nextNode = tmp->nextNode;
-		node2->previousNode = tmp->previousNode;
-		if(tmp->nextNode != NULL) {
-			tmp->nextNode->previousNode = node2;
+		// Move Process 2 to Process 1's place
+		process2->nextProcess = tmp->nextProcess;
+		process2->previousProcess = tmp->previousProcess;
+		if(tmp->nextProcess != NULL) {
+			tmp->nextProcess->previousProcess = process2;
 		}
-		if(tmp->previousNode != NULL) {
-			tmp->previousNode->nextNode = node2;
+		if(tmp->previousProcess != NULL) {
+			tmp->previousProcess->nextProcess = process2;
 		}
 	}
 
-	delete_node(tmp);
+	delete_process(tmp);
 
-	if(node1->previousNode == NULL){
-		doublyList->head = node1;
-	} else if (node2->previousNode == NULL) {
-		doublyList->head = node2;
+	if(process1->previousProcess == NULL){
+		doublyList->head = process1;
+	} else if (process2->previousProcess == NULL) {
+		doublyList->head = process2;
 	}
 
-	if(node1->nextNode == NULL){
-		doublyList->tail = node1;
-	} else if (node2->nextNode == NULL) {
-		doublyList->tail = node2;
+	if(process1->nextProcess == NULL){
+		doublyList->tail = process1;
+	} else if (process2->nextProcess == NULL) {
+		doublyList->tail = process2;
 	}
 }
 
 
-void dll_insertion_sort(DoublyLinkedList *doublyList) {
+void dll_insertion_sort(DoublyLinkedList *doublyList, char *parameter) {
 	/*
 	** function:    dll_insertion_sort
 	** author:      Jacob Taylor Cassady
 	** description: Sorts a DoublyLinkedList using the insertion sort algorithm.
 	*/
-	if(doublyList->head == NULL) {
-		printf("You attempted to sort an empty list.");
-	} else {
-		Node *minNode = doublyList->head;
-		Node *currentNode = doublyList->head;
-		Node *placeKeeper = doublyList->head;
 
-		while(placeKeeper->nextNode != NULL){
-			#if DEBUG
-				printf("PlaceKeeper: ");
-				print_node(placeKeeper);
-			#endif
-
-			while(currentNode->nextNode != NULL) {
-				#if DEBUG
-					printf("Current PlaceKeeper comparator: ");
-					print_node(currentNode->nextNode);
-				#endif
-				if(compare_node_by_word(currentNode->nextNode, minNode) < 0) {
-					minNode = currentNode->nextNode;
-					#if DEBUG
-						printf("New minNode found: ");
-						print_node(minNode);
-					#endif
-				}
-				currentNode = currentNode->nextNode;
-			}
-
-			#if DEBUG
-				printf("\n\nMade it through the first while loop!\n\n");
-			#endif
-
-			if(compare_node_by_word(minNode, placeKeeper) < 0) {
-				#if DEBUG
-					printf("The placekeeper wasn't the min! Swapping nodes.\n");
-					printf("\tPlaceKeeper: ");
-					print_node(placeKeeper);
-
-					printf("\tminNode: ");
-					print_node(minNode);
-				#endif
-
-				dll_swap_nodes(doublyList, placeKeeper, minNode);
-
-				placeKeeper = minNode->nextNode;
-
-			} else {
-				#if DEBUG
-					printf("No new min was found. iterating the placeKeeper node up one.\n");
-				#endif
-
-				placeKeeper = placeKeeper->nextNode;
-			}
-			currentNode = placeKeeper;
-			minNode = currentNode;
-		}
-	}
-}
-
-DoublyLinkedList *dll_merge_lists(DoublyLinkedList *merged_list, DoublyLinkedList *doublyList1, DoublyLinkedList *doublyList2) {
-	/*
-	** function:    dll_merge_lists
-	** author:      Jacob Taylor Cassady
-	** description: Sorts two lists using insertion sort and merges them after into a new DoublyLinkedList.
-	*/
-	// Sort the lists
-	dll_insertion_sort(doublyList1);
-	dll_insertion_sort(doublyList2);
-
-	DoublyLinkedList *smaller_list;
-	DoublyLinkedList *longer_list;
-
-	if(doublyList1->size < doublyList2->size) {
-		smaller_list = doublyList1;
-		longer_list = doublyList2;
-	} else {
-		smaller_list = doublyList2;
-		longer_list = doublyList1;
-	}
-
-	#if DEBUG
-		printf("Smaller List: ");
-		dll_print(smaller_list);
-		printf("Longer List: ");
-		dll_print(longer_list);
-		printf("Merged List: ");
-		dll_print(merged_list);
-	#endif
-
-	Node *small_ptr = smaller_list->head;
-	Node *long_ptr = longer_list->head;
-
-	while(small_ptr != NULL && long_ptr != NULL) {
-		// CASE Nodes in each list are equal.
-		if(compare_node_by_word(small_ptr, long_ptr) == 0) {
-			Node *matching_node = create_node("tmp");
-			copy_node(matching_node, small_ptr);
-			matching_node->count += long_ptr->count;
-
-			#if DEBUG
-				printf("\n\n!!! MATCHING NODE FOUND!!! ");
-				print_node(matching_node);
-			#endif
-			dll_insert_tail(merged_list, matching_node);
-
-			#if DEBUG
-				printf("Updated Merged List: ");
-				dll_print(merged_list);
-			#endif
-
-			small_ptr = small_ptr->nextNode;
-			long_ptr = long_ptr->nextNode;
-		// CASE Node in smaller list is less than node in longer list.
-		} else if (compare_node_by_word(small_ptr, long_ptr) < 0) {
-			small_ptr = small_ptr->nextNode;
-		// CASE Node in smaller list is greather than node in longer list. 
+	// PRIORITY SORT
+	if (strcmp(parameter, "priority") == 0) {
+		if(doublyList->head == NULL) {
+			printf("You attempted to sort an empty list.");
 		} else {
-			long_ptr = long_ptr->nextNode;
-		}
+			Process *minProcess = doublyList->head;			// Keeps track of minimum process
+			Process *currentProcess = doublyList->head;		// Keeps track of iterator
+			Process *placeKeeper = doublyList->head; 		// Keeps track of sorted and unsorted line
 
+			while(placeKeeper->nextProcess != NULL){
+				#if DEBUG
+					printf("PlaceKeeper: ");
+					print_process(placeKeeper);
+				#endif
+
+				while(currentProcess->nextProcess != NULL) {
+					#if DEBUG
+						printf("Current PlaceKeeper comparator: ");
+						print_process(currentProcess->nextProcess);
+					#endif
+
+					if(compare_process_by_priority(currentProcess->nextProcess, minProcess) < 0) {
+						minProcess = currentProcess->nextProcess;
+
+						#if DEBUG
+							printf("New minProcess found: ");
+							print_process(minProcess);
+						#endif
+					} else if (compare_process_by_priority(currentProcess->nextProcess, minProcess) == 0) {
+						if(compare_process_by_arrival_time(currentProcess->nextProcess, minProcess) < 0) {
+							minProcess = currentProcess->nextProcess;
+						}
+
+						#if DEBUG
+							printf("New minProcess found: ");
+							print_process(minProcess);
+						#endif
+					}
+					currentProcess = currentProcess->nextProcess;
+				}
+
+				#if DEBUG
+					printf("\n\nMade it through the first while loop!\n\n");
+				#endif
+
+				if(compare_process_by_priority(minProcess, placeKeeper) < 0) {
+					#if DEBUG
+						printf("The placekeeper wasn't the min! Swapping processes.\n");
+						printf("\tPlaceKeeper: ");
+						print_process(placeKeeper);
+
+						printf("\tminProcess: ");
+						print_process(minProcess);
+					#endif
+
+					dll_swap_processes(doublyList, placeKeeper, minProcess);
+
+					placeKeeper = minProcess->nextProcess;
+
+				} else {
+					#if DEBUG
+						printf("No new min was found. iterating the placeKeeper process up one.\n");
+					#endif
+
+					placeKeeper = placeKeeper->nextProcess;
+				}
+				currentProcess = placeKeeper;
+				minProcess = currentProcess;
+			}
+		}
 	}
 
-	return merged_list;
+	//arrival_time Sort	
+	if (strcmp(parameter, "arrival_time") == 0) {
+		if(doublyList->head == NULL) {
+			printf("You attempted to sort an empty list.");
+		} else {
+			Process *minProcess = doublyList->head;
+			Process *currentProcess = doublyList->head;
+			Process *placeKeeper = doublyList->head;
+
+			while(placeKeeper->nextProcess != NULL){
+				#if DEBUG
+					printf("PlaceKeeper: ");
+					print_process(placeKeeper);
+				#endif
+
+				while(currentProcess->nextProcess != NULL) {
+					#if DEBUG
+						printf("Current PlaceKeeper comparator: ");
+						print_process(currentProcess->nextProcess);
+					#endif
+					if(compare_process_by_arrival_time(currentProcess->nextProcess, minProcess) < 0) {
+						minProcess = currentProcess->nextProcess;
+						#if DEBUG
+							printf("New minProcess found: ");
+							print_process(minProcess);
+						#endif
+					}
+					currentProcess = currentProcess->nextProcess;
+				}
+
+				#if DEBUG
+					printf("\n\nMade it through the first while loop!\n\n");
+				#endif
+
+				if(compare_process_by_arrival_time(minProcess, placeKeeper) < 0) {
+					#if DEBUG
+						printf("The placekeeper wasn't the min! Swapping processes.\n");
+						printf("\tPlaceKeeper: ");
+						print_process(placeKeeper);
+
+						printf("\tminProcess: ");
+						print_process(minProcess);
+					#endif
+
+					dll_swap_processes(doublyList, placeKeeper, minProcess);
+
+					placeKeeper = minProcess->nextProcess;
+
+				} else {
+					#if DEBUG
+						printf("No new min was found. iterating the placeKeeper process up one.\n");
+					#endif
+
+					placeKeeper = placeKeeper->nextProcess;
+				}
+				currentProcess = placeKeeper;
+				minProcess = currentProcess;
+			}
+		}
+	}
+
+
+	//finish_time sort
+	if (strcmp(parameter, "finish_time") == 0) {
+		if(doublyList->head == NULL) {
+			printf("You attempted to sort an empty list.");
+		} else {
+			Process *minProcess = doublyList->head;
+			Process *currentProcess = doublyList->head;
+			Process *placeKeeper = doublyList->head;
+
+			while(placeKeeper->nextProcess != NULL){
+				#if DEBUG
+					printf("PlaceKeeper: ");
+					print_process(placeKeeper);
+				#endif
+
+				while(currentProcess->nextProcess != NULL) {
+					#if DEBUG
+						printf("Current PlaceKeeper comparator: ");
+						print_process(currentProcess->nextProcess);
+					#endif
+					if(compare_process_by_finish_time(currentProcess->nextProcess, minProcess) < 0) {
+						minProcess = currentProcess->nextProcess;
+						#if DEBUG
+							printf("New minProcess found: ");
+							print_process(minProcess);
+						#endif
+					}
+					currentProcess = currentProcess->nextProcess;
+				}
+
+				#if DEBUG
+					printf("\n\nMade it through the first while loop!\n\n");
+				#endif
+
+				if(compare_process_by_finish_time(minProcess, placeKeeper) < 0) {
+					#if DEBUG
+						printf("The placekeeper wasn't the min! Swapping processes.\n");
+						printf("\tPlaceKeeper: ");
+						print_process(placeKeeper);
+
+						printf("\tminProcess: ");
+						print_process(minProcess);
+					#endif
+
+					dll_swap_processes(doublyList, placeKeeper, minProcess);
+
+					placeKeeper = minProcess->nextProcess;
+
+				} else {
+					#if DEBUG
+						printf("No new min was found. iterating the placeKeeper process up one.\n");
+					#endif
+
+					placeKeeper = placeKeeper->nextProcess;
+				}
+				currentProcess = placeKeeper;
+				minProcess = currentProcess;
+			}
+		}
+	}
+
 }
+
 
 void dll_print(DoublyLinkedList *doublyList) {
 	/*
 	** function:    dll_print
 	** author:      Jacob Taylor Cassady
-	** description: Prints information on a DoublyLinkedList and the nodes within.
+	** description: Prints information on a DoublyLinkedList and the processes within.
 	*/
 	printf("=== Printing Doubly Linked List of size: %d | memory address: %p ===\n", doublyList->size, doublyList->head);
  
  	if ( doublyList->head == NULL ) {
  		printf("This list is empty. It's head is NULL.\n");
  	} else {
-	 	Node *currentNode = doublyList->head;
+	 	Process *currentProcess = doublyList->head;
 
-		while(currentNode != NULL){
-			print_node(currentNode);
-			currentNode = currentNode->nextNode;
+		while(currentProcess != NULL){
+			print_process(currentProcess);
+			currentProcess = currentProcess->nextProcess;
 		}
  	}
 }
 
-void dll_log(DoublyLinkedList *doublyList, char *log_destination) {
+void dll_log(char *log_destination, DoublyLinkedList *doublyList) {
 	/*
 	** function:    dll_log
 	** author:      Jacob Taylor Cassady
-	** description: Logs node word and count information from a DoublyLinkedList into a log specified by log_destiantion path.
+	** description: Logs process information from a DoublyLinkedList into a log specified by log_destiantion path.
 	*/
- 	Node *currentNode = doublyList->head;
-	Node *nextNode;
+ 	Process *currentProcess = doublyList->head;
 
 	FILE *log = fopen(log_destination, "w+");
 
-	while(currentNode != NULL){
-		nextNode = currentNode->nextNode;
+	while(currentProcess != NULL){
+		log_process(log, currentProcess);
 
-		log_node(currentNode, log);
-		fprintf(log, "\n");
-
-		currentNode = nextNode;
+		currentProcess = currentProcess->nextProcess;
 	}
 
 	fclose(log);

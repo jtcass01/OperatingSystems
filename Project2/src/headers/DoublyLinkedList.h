@@ -8,12 +8,12 @@
 #include <string.h>
 
 /* User Created Headers */
-#include "Node.h"
+#include "Process.h"
 #include "constants.h"
 
 typedef struct {
-	Node *head;
-	Node *tail;
+	Process *head;
+	Process *tail;
 	int size;
 } DoublyLinkedList;
 
@@ -25,31 +25,33 @@ DoublyLinkedList *dll_create(void);
 void dll_destroy(DoublyLinkedList *);
 // Dynamically deallocates memory stored within a DoublyLinkedList and each of it's nodes.
 
-void dll_insert_tail(DoublyLinkedList *, Node *);
-// Inserts a node into the tail end of a DoublyLinkedList.
+void dll_insert_tail(DoublyLinkedList *, Process *);
+// Inserts a process into the tail end of a DoublyLinkedList.
 
-void dll_insert_head(DoublyLinkedList *, Node *);
-// Inserts a node into the head end of a DoublyLinkedList.
+void dll_insert_head(DoublyLinkedList *, Process *);
+// Inserts a process into the head end of a DoublyLinkedList.
 
-void dll_delete_node_by_word(DoublyLinkedList *, char *);
-// Searches for a Node within a DoublyLinkedList using a word identifier and deletes it if found.
+void dll_snip(DoublyLinkedList *, int);
+// Curtails a DoublyLinkedList to a specific size.
 
-Node *dll_find_node_by_word(DoublyLinkedList *, char *);
-// Searches for a Node within a DoublyLinkedList using a word identifier.
+void dll_delete_process_by_id(DoublyLinkedList *, int);
+// Searches for a Process within a DoublyLinkedList using a pid identifier and deletes it if found.
 
-void dll_swap_nodes(DoublyLinkedList*, Node *, Node *);
-// Swaps two nodes.
+Process *dll_find_process_by_id(DoublyLinkedList *, int);
+// Searches for a Process within a DoublyLinkedList using a pid identifier.
 
-void dll_insertion_sort(DoublyLinkedList *);
+Process *dll_find_minimum_process(DoublyLinkedList *, char *);
+
+void dll_swap_processes(DoublyLinkedList*, Process *, Process *);
+// Swaps two processes.
+
+void dll_insertion_sort(DoublyLinkedList *, char *);
 // Sorts a DoublyLinkedList using the insertion sort algorithm.
 
-DoublyLinkedList *dll_merge_lists(DoublyLinkedList *, DoublyLinkedList *, DoublyLinkedList *);
-// Sorts two lists using insertion sort and merges them after into a new DoublyLinkedList.
-
 void dll_print(DoublyLinkedList *);
-// Prints information on a DoublyLinkedList and the nodes within.
+// Prints information on a DoublyLinkedList and the processes within.
 
-void dll_log(DoublyLinkedList *, char *);
-// Logs node word and count information from a DoublyLinkedList into a log specified by log_destiantion path.
+void dll_log(char *, DoublyLinkedList *);
+// Logs process information from a DoublyLinkedList into a log specified by log_destiantion path.
 
 #endif
