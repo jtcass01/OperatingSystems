@@ -11,6 +11,6 @@
 #include "constants.h"
 
 /* Function Prototypes */
-DoublyLinkedList *parse_process_file(char *, int);
+DoublyLinkedList *parse_process_file(char *, DoublyLinkedList *, int);
 
 #endif

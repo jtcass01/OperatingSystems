@@ -7,8 +7,7 @@
 /* User Created Headers */
 #include "../headers/FileParser.h"
 
-DoublyLinkedList *parse_process_file(char *file_location, int limit){
-	DoublyLinkedList *process_list = dll_create();
+DoublyLinkedList *parse_process_file(char *file_location, DoublyLinkedList *process_list, int limit){
 	int pid = 0, arrival_time = 0, burst_time = 0, priority = 0;
 	FILE *process_file;
 

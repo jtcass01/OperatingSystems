@@ -8,7 +8,7 @@
 int main(int argc, char *argv[]) {
 	char *input_file, *output_file, *sorting_algorithm;
 
-	DoublyLinkedList *unarrived;
+	DoublyLinkedList *unarrived = dll_create();
 	DoublyLinkedList *arrived_unfinished = dll_create();
 	DoublyLinkedList *finished = dll_create();
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 	#endif
 
 	// Parse the input file
-	unarrived = parse_process_file(input_file, limit);
+	parse_process_file(input_file, unarrived, limit);
 
 	// Apply Scheduling algorithm
 	if(strcmp(sorting_algorithm, "FCFS") == 0) {
@@ -59,8 +59,8 @@ int main(int argc, char *argv[]) {
 
 	dll_log(output_file, finished);
 
-	dll_destroy(finished);
-	dll_destroy(finished);
+	dll_destroy(unarrived);
+	dll_destroy(arrived_unfinished);
 	dll_destroy(finished);
 
 	return 0;
