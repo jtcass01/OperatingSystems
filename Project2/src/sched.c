@@ -1,10 +1,17 @@
 #include <stdio.h>
 
-#include "tests/SchedulingAlgorithmsTest.h"
+#include "headers/DoublyLinkedList.h"
+#include "headers/Process.h"
+#include "headers/FileParser.h"
+#include "headers/SchedulingAlgorithms.h"
 
 int main(int argc, char *argv[]) {
 	char *input_file, *output_file, *sorting_algorithm;
-	DoublyLinkedList *process_list;
+
+	DoublyLinkedList *unarrived;
+	DoublyLinkedList *arrived_unfinished = dll_create();
+	DoublyLinkedList *finished = dll_create();
+
 	int limit = 0;
 
 	// Set up arguments from command line
@@ -31,7 +38,7 @@ int main(int argc, char *argv[]) {
 	#endif
 
 	// Parse the input file
-	process_list = parse_process_file(input_file, limit);
+	unarrived = parse_process_file(input_file, limit);
 
 	// Apply Scheduling algorithm
 	if(strcmp(sorting_algorithm, "FCFS") == 0) {
@@ -39,20 +46,22 @@ int main(int argc, char *argv[]) {
 			printf("First come first serve\n");
 		#endif
 
-		first_come_first_serve(process_list);
+		first_come_first_serve(unarrived, finished);
 	} else if (strcmp(sorting_algorithm, "PP") == 0) {
 		#if DEBUG
 			printf("pre-emptive priority\n");
 		#endif
 
-		preemptive_priority(process_list);
+		preemptive_priority(unarrived, arrived_unfinished, finished);
 	} else {
 		printf("Invalid sorting algorithm.\n");
 	}
 
-	dll_log(output_file, process_list);
+	dll_log(output_file, finished);
 
-	dll_destroy(process_list);
+	dll_destroy(finished);
+	dll_destroy(finished);
+	dll_destroy(finished);
 
 	return 0;
 }

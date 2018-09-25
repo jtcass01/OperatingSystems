@@ -11,10 +11,10 @@
 /* Function Prototypes */
 void schedule_process(Process *, int *, int);
 
-void first_come_first_serve(DoublyLinkedList *);
+void first_come_first_serve(DoublyLinkedList *, DoublyLinkedList *);
 
-void preemptive_priority(DoublyLinkedList *);
+void preemptive_priority(DoublyLinkedList *, DoublyLinkedList *, DoublyLinkedList *);
 
-DoublyLinkedList *get_available_processes(DoublyLinkedList *, int );
+void update_process_lists(DoublyLinkedList *, DoublyLinkedList *, DoublyLinkedList *, int);
 
 #endif

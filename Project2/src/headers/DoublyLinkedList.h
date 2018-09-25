@@ -25,6 +25,9 @@ DoublyLinkedList *dll_create(void);
 void dll_destroy(DoublyLinkedList *);
 // Dynamically deallocates memory stored within a DoublyLinkedList and each of it's nodes.
 
+void dll_copy(DoublyLinkedList *, DoublyLinkedList *);
+//
+
 void dll_insert_tail(DoublyLinkedList *, Process *);
 // Inserts a process into the tail end of a DoublyLinkedList.
 
@@ -41,6 +44,10 @@ Process *dll_find_process_by_id(DoublyLinkedList *, int);
 // Searches for a Process within a DoublyLinkedList using a pid identifier.
 
 Process *dll_find_minimum_process(DoublyLinkedList *, char *);
+//
+
+void dll_move_process(DoublyLinkedList *, DoublyLinkedList *, Process *);
+//
 
 void dll_swap_processes(DoublyLinkedList*, Process *, Process *);
 // Swaps two processes.

@@ -62,6 +62,12 @@ void dll_destroy(DoublyLinkedList *doublyList) {
 }
 
 
+void dll_copy(DoublyLinkedList *destination, DoublyLinkedList *source){
+	destination->head = source->head;
+	destination->tail = source->tail;
+	destination->size = source->size;
+}
+
 void dll_insert_tail(DoublyLinkedList *doublyList, Process *newProcess) {
 	/*
 	** function:    dll_insert_tail
@@ -216,6 +222,29 @@ Process *dll_find_minimum_process(DoublyLinkedList *doublyList, char *parameter)
 	return minimumProcess;
 }
 
+
+void dll_move_process(DoublyLinkedList *destination_list, DoublyLinkedList *source_list, Process *process_to_be_added){
+	//Solo Dolo
+	if (process_to_be_added->nextProcess == NULL && process_to_be_added->previousProcess == NULL) {
+		source_list->head = NULL;
+		source_list->tail = NULL;
+	// FAR LEFT
+	} else if(process_to_be_added->previousProcess == NULL) {
+		process_to_be_added->nextProcess->previousProcess = NULL;
+		source_list->head = process_to_be_added->nextProcess;
+	// FAR RIGHT
+	} else if(process_to_be_added->nextProcess == NULL) {
+		process_to_be_added->previousProcess->nextProcess = NULL;
+		source_list->tail = process_to_be_added->previousProcess;
+	// MID
+	} else {
+		process_to_be_added->previousProcess->nextProcess = process_to_be_added->nextProcess;
+		process_to_be_added->nextProcess->previousProcess = process_to_be_added->previousProcess;
+	}
+
+	dll_insert_tail(destination_list, process_to_be_added);
+	source_list->size -= 1;
+}
 
 void dll_swap_processes(DoublyLinkedList *doublyList, Process *process1, Process *process2){
 	/*
