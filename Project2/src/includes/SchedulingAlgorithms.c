@@ -50,7 +50,7 @@ void first_come_first_serve(DoublyLinkedList *process_list, DoublyLinkedList *fi
 
 	Process *current_process = process_list->head;
 	Process *nextProcess;
-	int current_time = 0;
+	int system_time = 0;
 
 	while(current_process != NULL) {
 		#if DEBUG
@@ -58,7 +58,13 @@ void first_come_first_serve(DoublyLinkedList *process_list, DoublyLinkedList *fi
 			print_process(current_process);
 		#endif
 
-		schedule_process(current_process, &current_time, current_process->burst_time);
+		if(current_process->arrival_time <= system_time) {
+			schedule_process(current_process, &system_time, current_process->burst_time);
+		} else {
+			// fast forward to when the process will arrive.
+			system_time = current_process->arrival_time;
+			schedule_process(current_process, &system_time, current_process->burst_time);
+		}
 
 		nextProcess = current_process->nextProcess;
 		if(current_process->finish_time > 0) {
@@ -103,19 +109,25 @@ void preemptive_priority(DoublyLinkedList *unarrived, DoublyLinkedList *arrived_
 			dll_print(arrived_unfinished);
 		#endif
 
-		highest_priority_process = dll_find_minimum_process(arrived_unfinished, "priority");
+		if(arrived_unfinished->size != 0) {
+			highest_priority_process = dll_find_minimum_process(arrived_unfinished, "priority");
+
+			#if DEBUG
+				printf("\n\n=== Scheduling Process... ===\n");
+				print_process(highest_priority_process);
+			#endif
+
+			schedule_process(highest_priority_process, &system_time, PREEMPTIVE_TIME_DELTA);
+		}
+
+
+		update_process_lists(unarrived, arrived_unfinished, finished, system_time);
+
 
 		#if DEBUG
-			printf("\n\n=== Scheduling Process... ===\n");
-			print_process(highest_priority_process);
-
 			printf("\n\n=== Finished Processes ===\n");
 			dll_print(finished);
 		#endif
-
-		schedule_process(highest_priority_process, &system_time, PREEMPTIVE_TIME_DELTA);
-
-		update_process_lists(unarrived, arrived_unfinished, finished, system_time);
 	}
 
 	dll_insertion_sort(finished, "finish_time");
