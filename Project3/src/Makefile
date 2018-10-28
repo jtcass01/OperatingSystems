@@ -1,6 +1,17 @@
-CC = gcc# compiler
-CFLAGS = -pthread -Wall -g# compile flags
-LIBS = -lpthread -lrt# libs
+# compiler
+CC = gcc
+
+# compile flags
+CFLAGS = -pthread -Wall -g
+
+# libs
+LIBS = -lpthread -lrt
+
+# source files DEPLOYMENT
+SRCS = includes/DoublyLinkedList.c includes/Node.c mapper.c reducer.c
+
+# object files
+OBJS = $(SRCS:.c=.o)
 
 all: mapper reducer
 
@@ -10,8 +21,10 @@ mapper: mapper.o
 reducer: reducer.o
 	$(CC) -o reducer reducer.o $(LIBS)
 
-%.o:%.c
-	$(CC) $(CFLAGS) -c $*.c
+# generates the object files
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
+# cleans stuff
 clean:
-	rm -f reducer mapper *.o *~
+	rm -f $(OBJS) $(TARG) *~
