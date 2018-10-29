@@ -1,10 +1,9 @@
-
 #include "headers/mapper.h"
 
 void process_command_file(char *commandFile) {
 	DoublyLinkedList *command_list = dll_create();
 
-	parse_file(commandFile, command_list);
+	parse_file(command_list, commandFile);
 
 	dll_print(command_list);
 
