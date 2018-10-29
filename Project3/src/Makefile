@@ -13,7 +13,9 @@ SRCS = includes/DoublyLinkedList.c includes/Node.c mapper.c reducer.c
 # object files
 OBJS = $(SRCS:.c=.o)
 
-all: mapper reducer
+TARG = mapper reducer
+
+all: $(TARG)
 
 mapper: mapper.o
 	$(CC) -o mapper mapper.o $(LIBS)
