@@ -5,14 +5,16 @@ void process_command_file(char *commandFile) {
 	Function Description: The first step of the project is to
 	Author: Jacob Taylor Cassady
 	*/
+	// Initialize DLL for holding each line of the command file
+	DoublyLinkedList *directoryPaths = dll_create();
 
-	DoublyLinkedList *command_list = dll_create();
+	// Parse the command file and store in DLL.  Print for DEBUG
+	parse_file(directoryPaths, commandFile, MAXLINESIZE);
+	dll_print(directoryPaths);
 
-	parse_file(command_list, commandFile, MAXLINESIZE);
+	create_map_processes(directoryPaths);
 
-	dll_print(command_list);
-
-	dll_destroy(command_list);
+	dll_destroy(directoryPaths);
 }
 
 int main(int argc, char *argv[]) {

@@ -1,12 +1,15 @@
 /*
 ** File:         DoublyLinkedList.c
 ** Author:       Jacob Taylor Cassady
-** Description:  
+** Description:
 */
+
 
 /* User Created Headers */
 #include "../headers/DoublyLinkedList.h"
 
+
+/* Function Defintions */
 DoublyLinkedList *dll_create(void){
 	/*
 	** function:    dll_create
@@ -192,7 +195,7 @@ void dll_swap_nodes(DoublyLinkedList *doublyList, Node *node1, Node *node2){
 	} else if (node2->nextNode == node1) {
 		// Move Node 1 to Node 2's place
 		if(node2->previousNode != NULL) {
-			node2->previousNode->nextNode = node1;				
+			node2->previousNode->nextNode = node1;
 		}
 
 		node1->nextNode = node2;
@@ -208,7 +211,7 @@ void dll_swap_nodes(DoublyLinkedList *doublyList, Node *node1, Node *node2){
 	} else {
 		// Move Node 1 to Node 2's place
 		if(node2->previousNode != NULL) {
-			node2->previousNode->nextNode = node1;				
+			node2->previousNode->nextNode = node1;
 		}
 		if(node2->nextNode != NULL) {
 			node2->nextNode->previousNode = node1;
@@ -364,7 +367,7 @@ DoublyLinkedList *dll_merge_lists(DoublyLinkedList *merged_list, DoublyLinkedLis
 		// CASE Node in smaller list is less than node in longer list.
 		} else if (compare_node_by_word(small_ptr, long_ptr) < 0) {
 			small_ptr = small_ptr->nextNode;
-		// CASE Node in smaller list is greather than node in longer list. 
+		// CASE Node in smaller list is greather than node in longer list.
 		} else {
 			long_ptr = long_ptr->nextNode;
 		}
@@ -381,7 +384,7 @@ void dll_print(DoublyLinkedList *doublyList) {
 	** description: Prints information on a DoublyLinkedList and the nodes within.
 	*/
 	printf("=== Printing Doubly Linked List of size: %d | memory address: %p ===\n", doublyList->size, doublyList->head);
- 
+
  	if ( doublyList->head == NULL ) {
  		printf("This list is empty. It's head is NULL.\n");
  	} else {
