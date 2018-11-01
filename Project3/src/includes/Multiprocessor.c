@@ -9,32 +9,24 @@
 
 /* Function Defintions */
 void create_map_processes(DoublyLinkedList *directoryPaths) {
-    pid_t *pid_array = initialize_pid_array(directoryPaths->size);
+    Node *currentProcess = directoryPaths->head;
 
-    for(unsigned int i = 0; i < directoryPaths->size; i++) {
-      pid_array[i] = fork(); /* fork a child process */
+    while(currentProcess != NULL) {
+      currentProcess->id = fork(); /* fork a child process */
 
-      if (pid_array[i] < 0) { /* error occurred */
+      if (currentProcess->id < 0) { /* error occurred */
         fprintf(stderr, "Fork Failed\n");
         exit(-1);
-      } else if (pid_array[i] == 0) { /* child process */
-        printf("I am the child with pid = %d, n = %d\n", getpid(), pid_array[i]);
+      } else if (currentProcess->id == 0) { /* child process */
+        printf("I am the child with pid = %d, n = %d\n", getpid(), currentProcess->id);
         return execlp("/bin/ls", "ls", NULL);
       } else { /* parent process */
-        printf("I am the parent with pid = %d, n = %d\n", getpid(), pid_array[i]);
+        printf("I am the parent with pid = %d, n = %d\n", getpid(), currentProcess->id);
         wait(NULL); /* parent will wait for the child to complete */
         printf("Child Complete\n");
         exit(0);
       }
+
+      currentProcess = currentProcess->nextNode;
     }
-}
-
-pid_t *initialize_pid_array(int array_size) {
-  pid_t pid_array[array_size];
-
-  for(unsigned int i = 0; i < array_size; i++) {
-    pid_array[i] = 0;
-  }
-
-  return pid_array;
 }

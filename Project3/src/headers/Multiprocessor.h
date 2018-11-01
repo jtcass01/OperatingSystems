@@ -11,6 +11,7 @@
 /* User Created Headers */
 #include "constants.h"
 #include "DoublyLinkedList.h"
+#include "Node.h"
 
 /* Function Prototypes */
 void create_map_processes(DoublyLinkedList *);
