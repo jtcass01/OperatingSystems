@@ -13,13 +13,23 @@ SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c include
 # object files
 OBJS = $(SRCS:.c=.o)
 
-all: mapper reducer
+TARG = mapper
 
-mapper: mapper.o
-	$(CC) -o mapper mapper.o $(OBJS) $(LIBS)
+all: $(TARG)
 
-reducer: reducer.o
-	$(CC) -o reducer reducer.o $(OBJS) $(LIBS)
+# generates the target executable
+$(TARG):$(OBJS)
+	$(CC) -o $(TARG) $(OBJS) $(LIBS)
+
+
+# Goal is to get these two to work... eventually
+#all: mapper reducer
+#mapper: mapper.o
+#	$(CC) -o mapper mapper.o $(LIBS)
+#reducer: reducer.o
+#	$(CC) -o reducer reducer.o $(OBJS) $(LIBS)
+
+
 
 # generates the object files
 %.o: %.c
