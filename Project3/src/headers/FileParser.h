@@ -11,9 +11,9 @@
 #include "constants.h"
 
 /* Function Prototypes */
-void parse_file(DoublyLinkedList *, char *);
+void parse_file(DoublyLinkedList *, char *, int);
 
-void add_words_from_line_to_list(DoublyLinkedList *, char *);
+void add_words_from_line_to_list(DoublyLinkedList *, char *, int);
 
 void get_word(char *, char *, long, long);
 

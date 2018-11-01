@@ -1,13 +1,13 @@
 /*
 ** File:         FileParser.c
 ** Author:       Jacob Taylor Cassady
-** Description:  
+** Description:
 */
 
 /* User Created Headers */
 #include "../headers/FileParser.h"
 
-void parse_file(DoublyLinkedList *file_list, char *file_path) {
+void parse_file(DoublyLinkedList *file_list, char *file_path, int max_word_size_expected) {
 	char *data_line = NULL;
 	size_t len = 0;
 
@@ -25,9 +25,9 @@ void parse_file(DoublyLinkedList *file_list, char *file_path) {
 	#endif
 
 	while(getline(&data_line, &len, data_stream) != -1) {
-		
+
 		if(line_has_word(data_line)) {
-			add_words_from_line_to_list(file_list, data_line);
+			add_words_from_line_to_list(file_list, data_line, max_word_size_expected);
 		}
 	}
 
@@ -40,10 +40,10 @@ void parse_file(DoublyLinkedList *file_list, char *file_path) {
 	fclose(data_stream);
 }
 
-void add_words_from_line_to_list(DoublyLinkedList *doublyList, char *data_line) {
+void add_words_from_line_to_list(DoublyLinkedList *doublyList, char *data_line, int max_word_size_expected) {
 	int word_found = 0, char_count = 0, word_start_index = 0;
-	char word_buffer[MAXLINESIZE];
-				
+	char word_buffer[max_word_size_expected];
+
 	#if DEBUG
 		print_data_line_info(data_line);
 	#endif

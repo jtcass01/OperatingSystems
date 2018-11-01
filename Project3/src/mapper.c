@@ -1,9 +1,14 @@
 #include "headers/mapper.h"
 
 void process_command_file(char *commandFile) {
+	/*
+	Function Description: The first step of the project is to
+	Author: Jacob Taylor Cassady
+	*/
+
 	DoublyLinkedList *command_list = dll_create();
 
-	parse_file(command_list, commandFile);
+	parse_file(command_list, commandFile, MAXLINESIZE);
 
 	dll_print(command_list);
 
@@ -23,7 +28,7 @@ int main(int argc, char *argv[]) {
 		bufferSize = atoi(*(argv + 2));
 	}
 
-	printf("\n\tcommandFile: %s\n\tbufferSize: %d", commandFile, bufferSize);
+	printf("\tcommandFile: %s\n\tbufferSize: %d\n", commandFile, bufferSize);
 
 	process_command_file(commandFile);
 
