@@ -15,4 +15,6 @@
 /* Function Prototypes */
 void create_map_processes(DoublyLinkedList *);
 
+pid_t *initialize_pid_array(int);
+
 #endif

@@ -9,7 +9,7 @@
 
 /* Function Defintions */
 void create_map_processes(DoublyLinkedList *directoryPaths) {
-    pid_t pid_array[directoryPaths->size] = 0;
+    pid_t *pid_array = initialize_pid_array(directoryPaths->size);
 
     for(unsigned int i = 0; i < directoryPaths->size; i++) {
       pid_array[i] = fork(); /* fork a child process */
@@ -27,4 +27,14 @@ void create_map_processes(DoublyLinkedList *directoryPaths) {
         exit(0);
       }
     }
+}
+
+pid_t *initialize_pid_array(int array_size) {
+  pid_t pid_array[array_size];
+
+  for(unsigned int i = 0; i < array_size; i++) {
+    pid_array[i] = 0;
+  }
+
+  return pid_array;
 }
