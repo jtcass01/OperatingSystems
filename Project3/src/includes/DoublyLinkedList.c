@@ -26,13 +26,15 @@ DoublyLinkedList *dll_create(void){
 
 	if(doublyList == NULL) {
 		printf("Unable to allocate memory for DoublyLinkedList.\n");
-	} else {
-		#if DEBUG
-			printf("Successfully Allocated memory for a DoublyLinkedList.  Initializing attributes...\n");
-		#endif
+
+		return;
 	}
 
-	// Initiate the attributes.
+	#if DEBUG
+		printf("Successfully Allocated memory for a DoublyLinkedList.  Initializing attributes...\n");
+	#endif
+
+	// Intialize attributes.
 	doublyList->head = NULL;
 	doublyList->tail = NULL;
 	doublyList->size = 0;
