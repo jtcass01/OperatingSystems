@@ -20,8 +20,8 @@ void create_map_processes(DoublyLinkedList *directoryPaths) {
 			printf("I am the child with pid = %d and process_index = %d, from parent = %d, BEGINNING WORK.\n", getpid(), process_index, getppid());
 			
 			// Do work with processes
-			process_node = dll_find_node_by_index(directoryPaths, process_index);
-			printf("Creating map threads for directory: %s\n", process_node->word)
+			Node *process_node = dll_find_node_by_index(directoryPaths, process_index);
+			printf("Creating map threads for directory: %s\n", process_node->word);
 			create_map_threads(process_node->word);
 
 			// exit child process
