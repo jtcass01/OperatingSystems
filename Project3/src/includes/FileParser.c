@@ -9,18 +9,22 @@
 
 void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 	DIR *directory_o;
-	struct dirent *directory;
 
+	// Open the directory path
 	directory_o = opendir(directory_path);
 
-	if (directory_o) {
+	if (directory_o == NULL) {
+		printf("Unable to open directory : %s\n", directory_path);
+
+		return;
+	} else {
+		struct dirent *directory;
+
 		while ((directory = readdir(directory_o)) != NULL) {
 			printf("%s\n", directory->d_name);
 		}
 
 		closedir(directory_o);
-	} else {
-		printf("Unable to open directory : %s\n", directory_path);
 	}
 }
 
