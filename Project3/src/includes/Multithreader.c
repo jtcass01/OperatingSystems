@@ -48,7 +48,7 @@ void create_map_threads(char *directory_path) {
 
 	// Join worker threads.
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
-		join_pThread(worker_thread[thread_index], NULL);
+		join_pThread(worker_threads[thread_index], NULL);
 	}
 
 	// Join sender thread.
