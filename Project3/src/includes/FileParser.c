@@ -26,7 +26,7 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 		while ((directory = readdir(directory_o)) != NULL) {
 			// Ensure the directory item is a file.
 			if (directory->d_type == DT_REG) {
-				printf("%s\n", directory->d_name);
+				printf("%s\n", directory_path + directory->d_name);
 
 				// Create a node to represent the file and add it to the file_list
 				Node *file_node = create_node(directory->d_name);
