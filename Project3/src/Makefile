@@ -8,11 +8,12 @@ CFLAGS = -pthread -Wall -g
 LIBS = -lpthread -lrt -lm
 
 # source files DEPLOYMENT
-SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Multiprocessor.c
+SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Multiprocessor.c mapper.c
 
 # object files
 OBJS = $(SRCS:.c=.o)
 
+# target
 TARG = mapper
 
 all: $(TARG)
@@ -20,16 +21,6 @@ all: $(TARG)
 # generates the target executable
 $(TARG):$(OBJS)
 	$(CC) -o $(TARG) $(OBJS) $(LIBS)
-
-
-# Goal is to get these two to work... eventually
-#all: mapper reducer
-#mapper: mapper.o
-#	$(CC) -o mapper mapper.o $(LIBS)
-#reducer: reducer.o
-#	$(CC) -o reducer reducer.o $(OBJS) $(LIBS)
-
-
 
 # generates the object files
 %.o: %.c
