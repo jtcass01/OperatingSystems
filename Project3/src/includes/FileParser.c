@@ -7,7 +7,24 @@
 /* User Created Headers */
 #include "../headers/FileParser.h"
 
-void parse_file(DoublyLinkedList *file_list, char *file_path, int max_word_size_expected) {
+void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
+	DIR *directory_o;
+	struct dirent *directory;
+
+	directory_o = opendir(directory_path);
+
+	if (directory_o) {
+		while ((directory = readdir(directory_o) != NULL) {
+			printf("%s\n", directory->d_name);
+		}
+
+		closedir(directory_o);
+	} else {
+		printf("Unable to open directory : %s\n", directory_path);
+	}
+}
+
+void parse_file(DoublyLinkedList *file_data, char *file_path, int max_word_size_expected) {
 	char *data_line = NULL;
 	size_t len = 0;
 
@@ -27,12 +44,12 @@ void parse_file(DoublyLinkedList *file_list, char *file_path, int max_word_size_
 	while(getline(&data_line, &len, data_stream) != -1) {
 
 		if(line_has_word(data_line)) {
-			add_words_from_line_to_list(file_list, data_line, max_word_size_expected);
+			add_words_from_line_to_list(file_data, data_line, max_word_size_expected);
 		}
 	}
 
 	#if DEBUG
-		dll_print(file_list);
+		dll_print(file_data);
 	#endif
 
 	free(data_line);

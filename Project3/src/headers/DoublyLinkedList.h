@@ -34,6 +34,9 @@ void dll_insert_head(DoublyLinkedList *, Node *);
 void dll_delete_node_by_word(DoublyLinkedList *, char *);
 // Searches for a Node within a DoublyLinkedList using a word identifier and deletes it if found.
 
+Node *dll_find_node_by_index(DoublyLinkedList *, int);
+// Searches for a Node within a DoublyLinkedList by index.
+
 Node *dll_find_node_by_word(DoublyLinkedList *, char *);
 // Searches for a Node within a DoublyLinkedList using a word identifier.
 

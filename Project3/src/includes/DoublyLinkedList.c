@@ -140,6 +140,26 @@ void dll_delete_node_by_word(DoublyLinkedList *doublyList, char *word_of_interes
 }
 
 
+Node *dll_find_node_by_index(DoublyLinkedList *doublyList, int index) {
+	/*
+	** function:    dll_find_node_by_word
+	** author:      Jacob Taylor Cassady
+	** description: Searches for a Node within a DoublyLinkedList by index.
+	*/
+	if (index >= doublyList->size || index < 0) {
+		return NULL;
+	} else {
+		Node *currentNode = doublyList->head;
+		
+		for (int node_index = 0; node_index < index; node_index++) {
+			currentNode = currentNode->nextNode;
+		}
+
+		return currentNode;
+	}
+}
+
+
 Node *dll_find_node_by_word(DoublyLinkedList *doublyList, char *word_of_interest) {
 	/*
 	** function:    dll_find_node_by_word
