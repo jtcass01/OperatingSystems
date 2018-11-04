@@ -8,6 +8,6 @@
 #include "FileParser.h"
 #include "DoublyLinkedList.h"
 
-void process_command_file(char *);
+void process_command_file(char *, int);
 
 #endif

@@ -27,7 +27,7 @@ DoublyLinkedList *dll_create(void){
 	if(doublyList == NULL) {
 		printf("Unable to allocate memory for DoublyLinkedList.\n");
 
-		return;
+		return NULL;
 	}
 
 	#if DEBUG

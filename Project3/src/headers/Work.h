@@ -12,13 +12,16 @@
 
 /* Struct definitions */
 typedef struct {
-	DoublyLinkedList *bounded_buffer;
+	DoublyLinkedList *dll_buffer;
+	int bufferSize;
 	char *file_name;
 	pthread_t thread;
 } Work;
 
 /* Function Prototypes */
-Work *work_create(DoublyLinkedList *, char *);
+Work *work_create(DoublyLinkedList *, int, char *);
+
+void *do_work(void *arg);
 
 void work_destroy(Work *);
 

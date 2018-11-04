@@ -7,7 +7,7 @@
 #include "../headers/Work.h"
 
 /* Function Definitions */
-Work *work_create(DoublyLinkedList *bounded_buffer, char *file_name) {
+Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name) {
 	Work *work_load = malloc(sizeof(Work));
 
 	if (work_load == NULL) {
@@ -21,14 +21,26 @@ Work *work_create(DoublyLinkedList *bounded_buffer, char *file_name) {
 	#endif
 
 	// Intialize attributes.
-	work_load->bounded_buffer = bounded_buffer;
+	work_load->dll_buffer = dll_buffer;
 	work_load->file_name = strdup(file_name);
+	work_load->bufferSize = bufferSize;
 
 	#if DEBUG
 		printf("Work successfully allocated and intitialized.  Returning...\n");
 	#endif
 
 	return work_load;
+}
+
+void *do_work(void *arg) {
+	Work *work = arg;
+	printf("(W): %s BEGINING.\n", work->file_name);
+
+
+
+	printf("(W): %s DONE.\n", work->file_name);
+	work_destroy(work);
+	return NULL;
 }
 
 void work_destroy(Work *work_load) {
