@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -pthread -Wall -g
 
 # libs
-LIBS = -lpthread -lrt
+LIBS = -lpthread -lrt -lm
 
 # source files DEPLOYMENT
 SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Multiprocessor.c
