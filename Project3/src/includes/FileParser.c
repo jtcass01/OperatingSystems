@@ -17,7 +17,9 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 		printf("Unable to open directory : %s\n", directory_path);
 
 		return;
-	} else {
+
+	} else { // Successful opening of directory.
+
 		struct dirent *directory;
 
 		// Iterate over the contents of the directory
@@ -25,6 +27,10 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 			// Ensure the directory item is a file.
 			if (directory->d_type == DT_REG) {
 				printf("%s\n", directory->d_name);
+
+				// Create a node to represent the file and add it to the file_list
+				Node *file_node = create_node(directory->d_name);
+				dll_insert_tail(file_list, file_node);
 			}
 		}
 
