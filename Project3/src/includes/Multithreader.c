@@ -51,22 +51,21 @@ void create_map_threads(char *directory_path) {
 	create_pThread(&sender, NULL, sender_thread, "sender");
 
 	// Create worker threads.
-	pthread_t worker_threads[file_list->size];
+	Work *workers[file_list->size];
 	Node *current_file = file_list->head;
 	// CREATE BOUNDED MEMORY BUFFER for now use unbounded..
 	DoublyLinkedList *bounded_buffer = dll_create();
 
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
-		Work *work = work_create(bounded_buffer, current_file->word);
-		create_pThread(&worker_threads[thread_index], NULL, worker_thread, work);
-
+		workers[thread_index] = work_create(bounded_buffer, current_file->word);
+		create_pThread(&(workers[thread_index]->thread), NULL, worker_thread, workers[thread_index]);
 
 		current_file = current_file->nextNode;
 	}
 
 	// Join worker threads.
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
-		join_pThread(worker_threads[thread_index], NULL);
+		join_pThread(workers[thread_index]->thread, NULL);
 	}
 
 	// Join sender thread.
