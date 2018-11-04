@@ -9,7 +9,8 @@
 
 /* Function Defintions */
 void create_map_processes(DoublyLinkedList *directoryPaths) {
-    Node *currentProcess = directoryPaths->head;
+	dll_print(directoryPaths);
+	Node *currentProcess = directoryPaths->head;
 	pid_t n;
 
     while(currentProcess != NULL) {

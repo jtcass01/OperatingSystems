@@ -10,8 +10,8 @@ void process_command_file(char *commandFile) {
 
 	// Parse the command file and store in DLL.  Print for DEBUG
 	parse_file(directoryPaths, commandFile, MAXLINESIZE);
-	dll_print(directoryPaths);
 
+	// Create a process for each directory listed in the commandFile
 	create_map_processes(directoryPaths);
 
 	dll_destroy(directoryPaths);
