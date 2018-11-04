@@ -10,7 +10,7 @@
 /* Function Defintions */
 void create_map_processes(DoublyLinkedList *directoryPaths) {
 	Node *currentProcess = directoryPaths->head;
-	pid_t *process_indicators[directoryPaths->size];
+	pid_t process_indicators[directoryPaths->size];
 
 	// DEBUG -- Display directory paths passed
 	dll_print(directoryPaths);
