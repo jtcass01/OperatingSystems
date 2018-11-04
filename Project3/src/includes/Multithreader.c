@@ -5,7 +5,7 @@ void *worker_thread(void *arg) {
 	char *id = arg;
 	printf("(W): %s BEGINING.\n", id);
 
-	printf("(W): %s DONE.", id);
+	printf("(W): %s DONE.\n", id);
 	return NULL;
 }
 
