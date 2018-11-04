@@ -23,9 +23,9 @@
 
 int sum; /* this data is shared by the thread(s) */
 
-		 /**
-		 * The thread will begin control in this function
-		 */
+ /**
+* The thread will begin control in this function
+*/
 void *runner(void *param) {
 
 	int i, upper = atoi(param);
