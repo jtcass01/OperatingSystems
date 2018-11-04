@@ -12,7 +12,6 @@ Node *create_node(char *string){
 
 	newNode->word = strdup(string);
 	newNode->count = 1;
-	newNode->id = 0;
 	newNode->nextNode = NULL;
 	newNode->previousNode = NULL;
 
@@ -25,7 +24,6 @@ Node *create_node_from_buffer(char *buffer, int char_count) {
 
 	newNode->word = strndup(buffer, char_count);
 	newNode->count = 1;
-	newNode->id = 0;
 	newNode->nextNode = NULL;
 	newNode->previousNode = NULL;
 
@@ -51,7 +49,6 @@ void copy_node(Node *destination, Node *source) {
 	free(destination->word);
 	destination->word = strdup(source->word);
 	destination->count = source->count;
-	destination->id = source->id;
 	destination->nextNode = source->nextNode;
 	destination->previousNode = source->previousNode;
 }
