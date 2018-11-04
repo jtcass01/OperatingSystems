@@ -10,4 +10,6 @@
 #include "Node.h"
 #include "FileParser.h"
 
+void create_map_threads(char *);
+
 #endif
