@@ -8,6 +8,7 @@
 
 /* User Created Headers */
 #include "constants.h"
+#include "DoublyLinkedList.h"
 
 /* Struct definitions */
 typedef struct {
