@@ -10,35 +10,23 @@
 /* Function Defintions */
 void create_map_processes(DoublyLinkedList *directoryPaths) {
 	Node *currentProcess = directoryPaths->head;
-	pid_t process_indicators[directoryPaths->size];
 
 	// DEBUG -- Display directory paths passed
+	printf("I am the parent process (pid: %d).  Beginning to create %d processes to serve each directory path.\n\n", getpid() ,directoryPaths->size);
 	dll_print(directoryPaths);
 
 	// Initialize the parent process indicators to 0.  Start processes
 	for (int process_index = 0; process_index < directoryPaths->size; process_index++) {
-		process_indicators[process_index] = 0;
-		process_indicators[process_index] = fork(); /* fork a child process */
+		if (fork() == 0) {
+			// DEBUG -- Display process information
+			printf("I am the child with pid = %d and process_index = %d, from parent = %d\n", getpid(), process_index, getppid());
+			
+			// Do work with processes
 
-		currentProcess = currentProcess->nextNode;
-	}
-
-	// Run processes
-	for (int process_index = 0; process_index < directoryPaths->size; process_index++) {
-		if (process_indicators[process_index] < 0) { /* error occurred */
-			fprintf(stderr, "Fork Failed\n");
-			exit(-1);
-		}
-		else if (process_indicators[process_index] == 0) { /* child process */
-			printf("I am the child with pid = %d, n = %d\n", getpid(), process_indicators[process_index]);
-			execlp("/bin/ls", "ls", NULL);
-		}
-		else { /* parent process */
-			printf("I am the parent with pid = %d, n = %d\n", getpid(), process_indicators[process_index]);
-			wait(NULL); /* parent will wait for the child to complete */
-			printf("Child Complete\n");
+			// exit child process
 			exit(0);
 		}
 	}
 
+	wait(NULL); /* parent will wait for the children to complete */
 }
