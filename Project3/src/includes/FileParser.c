@@ -14,7 +14,7 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 	directory_o = opendir(directory_path);
 
 	if (directory_o) {
-		while ((directory = readdir(directory_o) != NULL) {
+		while ((directory = readdir(directory_o)) != NULL) {
 			printf("%s\n", directory->d_name);
 		}
 
