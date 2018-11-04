@@ -15,11 +15,16 @@ void create_map_processes(DoublyLinkedList *directoryPaths) {
 	// DEBUG -- Display directory paths passed
 	dll_print(directoryPaths);
 
-	// Initialize the process indicators to 0.
+	// Initialize the parent process indicators to 0.  Start processes
 	for (int process_index = 0; process_index < directoryPaths->size; process_index++) {
 		process_indicators[process_index] = 0;
 		process_indicators[process_index] = fork(); /* fork a child process */
 
+		currentProcess = currentProcess->nextNode;
+	}
+
+	// Run processes
+	for (int process_index = 0; process_index < directoryPaths->size; process_index++) {
 		if (process_indicators[process_index] < 0) { /* error occurred */
 			fprintf(stderr, "Fork Failed\n");
 			exit(-1);
@@ -34,9 +39,6 @@ void create_map_processes(DoublyLinkedList *directoryPaths) {
 			printf("Child Complete\n");
 			exit(0);
 		}
-
-		currentProcess = currentProcess->nextNode;
-
 	}
 
 }
