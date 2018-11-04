@@ -2,7 +2,6 @@
 ** File:         Node.c
 ** Author:       Jacob Taylor Cassady
 ** Description:
-** Last Updated: 8/22/18
 */
 
 #include "../headers/Node.h"

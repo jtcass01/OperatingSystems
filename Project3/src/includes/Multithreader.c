@@ -1,11 +1,13 @@
-
 #include "../headers/Multithreader.h"
 
 void *worker_thread(void *arg) {
-	char *id = arg;
-	printf("(W): %s BEGINING.\n", id);
+	Work *work = arg;
+	printf("(W): %s BEGINING.\n", work->file_name);
 
-	printf("(W): %s DONE.\n", id);
+	
+
+	printf("(W): %s DONE.\n", work->file_name);
+	work_destroy(work);
 	return NULL;
 }
 
@@ -27,6 +29,16 @@ void join_pThread(pthread_t thread, void**value_ptr) {
 	assert(rc == 0);
 }
 
+void lock_pThread(pthread_mutex_t *mutex) {
+	int rc = pthread_mutex_lock(mutex);
+	assert(rc == 0);
+}
+
+void unlock_pThread(pthread_mutex_t *mutex) {
+	int rc = pthread_mutex_unlock(mutex);
+	assert(rc == 0);
+}
+
 void create_map_threads(char *directory_path) {
 	DoublyLinkedList *file_list = dll_create();
 
@@ -41,8 +53,14 @@ void create_map_threads(char *directory_path) {
 	// Create worker threads.
 	pthread_t worker_threads[file_list->size];
 	Node *current_file = file_list->head;
+	// CREATE BOUNDED MEMORY BUFFER for now use unbounded..
+	DoublyLinkedList *bounded_buffer = dll_create();
+
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
-		create_pThread(&worker_threads[thread_index], NULL, worker_thread, current_file->word);
+		Work *work = work_create(bounded_buffer, current_file->word);
+		create_pThread(&worker_threads[thread_index], NULL, worker_thread, work);
+
+
 		current_file = current_file->nextNode;
 	}
 
@@ -55,4 +73,5 @@ void create_map_threads(char *directory_path) {
 	join_pThread(sender, NULL);
 
 	dll_destroy(file_list);
+	dll_destroy(bounded_buffer);
 }
