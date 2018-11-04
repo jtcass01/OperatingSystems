@@ -20,8 +20,12 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 	} else {
 		struct dirent *directory;
 
+		// Iterate over the contents of the directory
 		while ((directory = readdir(directory_o)) != NULL) {
-			printf("%s\n", directory->d_name);
+			// Ensure the directory item is a file.
+			if (directory->d_type == DT_REG) {
+				printf("%s\n", directory->d_name);
+			}
 		}
 
 		closedir(directory_o);
