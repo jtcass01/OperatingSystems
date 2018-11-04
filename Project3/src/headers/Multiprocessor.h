@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "DoublyLinkedList.h"
 #include "Node.h"
+#include "Multithreader.h"
 
 /* Function Prototypes */
 void create_map_processes(DoublyLinkedList *);
