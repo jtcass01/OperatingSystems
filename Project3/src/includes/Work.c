@@ -22,7 +22,7 @@ Work *work_create(DoublyLinkedList *bounded_buffer, char *file_name) {
 
 	// Intialize attributes.
 	work_load->bounded_buffer = bounded_buffer;
-	work_load->file_name = strndup(file_name);
+	work_load->file_name = strdup(file_name);
 
 	#if DEBUG
 		printf("Work successfully allocated and intitialized.  Returning...\n");

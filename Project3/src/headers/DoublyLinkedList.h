@@ -11,6 +11,7 @@
 #include "Node.h"
 #include "constants.h"
 
+/* Struct definitions */
 typedef struct {
 	Node *head;
 	Node *tail;
@@ -18,6 +19,7 @@ typedef struct {
 } DoublyLinkedList;
 
 
+/* Function Prototypes */
 DoublyLinkedList *dll_create(void);
 //Dynamically allocates memory for a DoublyLinkedList, initializes the list's
 //attributes and returns a pointer to the struct.
