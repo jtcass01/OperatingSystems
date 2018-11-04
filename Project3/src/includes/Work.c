@@ -13,7 +13,7 @@ Work *work_create(DoublyLinkedList *bounded_buffer, char *file_name) {
 	if (work_load == NULL) {
 		printf("Unable to allocate memory for Work.\n");
 
-		return;
+		return NULL;
 	}
 
 	#if DEBUG
