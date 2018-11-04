@@ -8,17 +8,17 @@ CFLAGS = -pthread -Wall -g
 LIBS = -lpthread -lrt -lm
 
 # source files DEPLOYMENT
-SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Multithreader.c includes/Multiprocessor.c mapper.c
+#SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Multithreader.c includes/Multiprocessor.c mapper.c
 # source files TEST
-#SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Multithreader.c includes/Multiprocessor.c test.c
+SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Multithreader.c includes/Multiprocessor.c test.c
 
 # object files
 OBJS = $(SRCS:.c=.o)
 
 # target DEPLOYMENT
-TARG = mapper
+#TARG = mapper
 # target TEST
-#TARG = test
+TARG = test
 
 all: $(TARG)
 
