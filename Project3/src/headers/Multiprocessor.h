@@ -16,4 +16,6 @@
 /* Function Prototypes */
 void create_map_processes(DoublyLinkedList *);
 
+pid_t *initialize_process_indicator_array(int);
+
 #endif

@@ -12,6 +12,7 @@ void create_map_processes(DoublyLinkedList *directoryPaths) {
 	dll_print(directoryPaths);
 	Node *currentProcess = directoryPaths->head;
 	pid_t n;
+	pid_t *indicators = initialize_process_indicator_array(directoryPaths->size);
 
     while(currentProcess != NULL) {
       n = fork(); /* fork a child process */
@@ -31,4 +32,14 @@ void create_map_processes(DoublyLinkedList *directoryPaths) {
 
       currentProcess = currentProcess->nextNode;
     }
+}
+
+pid_t *initialize_process_indicator_array(int number_of_processes) {
+	pid_t *process_indicators[number_of_processes];
+
+	for (int process_index = 0; process_index < number_of_processes; process_index++) {
+		process_indicators[process_index] = 0;
+	}
+
+	return process_indicators;
 }
