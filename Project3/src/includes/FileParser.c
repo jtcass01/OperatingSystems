@@ -9,6 +9,7 @@
 
 void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 	DIR *directory_o;
+	char *full_path[MAXLINESIZE];
 
 	// Open the directory path
 	directory_o = opendir(directory_path);
@@ -26,9 +27,9 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 		while ((directory = readdir(directory_o)) != NULL) {
 			// Ensure the directory item is a file.
 			if (directory->d_type == DT_REG) {
-
+				strcpy(full_path, directory_path);
+				strncat(full_path, directory->d_name, MAXLINESIZE)
 				// Create a node to represent the file and add it to the file_list
-				char *full_path = concat(directory_path, directory->d_name);
 				printf("%s\n", full_path);
 				Node *file_node = create_node(full_path);
 				free(full_path);
