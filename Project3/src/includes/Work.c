@@ -35,7 +35,21 @@ Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name)
 void *do_work(void *arg) {
 	Work *work = arg;
 	printf("(W): %s BEGINING.\n", work->file_name);
+	// Open work file. Rewind buffer to beginning.
+	FILE *data_buffer = fopen(work->file_name, "r");
+	rewind(data_buffer);
 
+	char word[MAXWORDSIZE];
+
+	while (fscanf(data_buffer, "%s", word) != EOF) {
+		Node *word_node = create_node(word);
+
+		if (work->dll_buffer->size >= work->bufferSize) {
+			// wait until unlocked.
+		}
+
+		dll_insert_tail(work->dll_buffer, word_node);
+	}
 
 
 	printf("(W): %s DONE.\n", work->file_name);

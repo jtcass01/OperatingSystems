@@ -43,7 +43,6 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	Work *workers[file_list->size];
 	Node *current_file = file_list->head;
 	DoublyLinkedList *dll_buffer = dll_create();
-
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
 		workers[thread_index] = work_create(dll_buffer, bufferSize, current_file->word);
 		create_pThread(&(workers[thread_index]->thread), NULL, do_work, workers[thread_index]);
@@ -58,6 +57,8 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 	// Join sender thread.
 	join_pThread(sender, NULL);
+
+	dll_print(dll_buffer);
 
 	dll_destroy(file_list);
 	dll_destroy(dll_buffer);
