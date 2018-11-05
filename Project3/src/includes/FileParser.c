@@ -9,7 +9,7 @@
 
 void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 	DIR *directory_o;
-	char *full_path[MAXLINESIZE];
+	char full_path[MAXLINESIZE];
 
 	// Open the directory path
 	directory_o = opendir(directory_path);
