@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <assert.h>
 #include <sched.h>
+#include <semaphore.h>
 
 /* User Created Headers */
 #include "constants.h"
