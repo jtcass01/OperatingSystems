@@ -57,7 +57,6 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 	// Create worker threads.
 	Work *workers[file_list->size];
-	pthread_mutex_t worker_lock = PTHREAD_MUTEX_INITIALIZER;
 	Node *current_file = file_list->head;
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
 		//Create worker thread with given work load
@@ -73,10 +72,12 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	}
 
 	// Join sender thread.
-	join_pThread(sender, NULL);
+	join_pThread(sender->thread, NULL);
 
+	// Print file buffer
 	dll_print(dll_buffer);
 
+	// Destroy created dlls
 	dll_destroy(file_list);
 	dll_destroy(dll_buffer);
 }
