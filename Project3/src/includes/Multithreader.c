@@ -53,7 +53,7 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 	// Create sender thread.
 	Sender *sender = sender_create(dll_buffer, empty, full, mutex);
-	create_pThread(&(sender->thread), NULL, send_items, "sender");
+	create_pThread(&(sender->thread), NULL, send_items, sender);
 
 	// Create worker threads.
 	Work *workers[file_list->size];
@@ -73,7 +73,7 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
-
+	
 	// Print file buffer
 	dll_print(dll_buffer);
 
