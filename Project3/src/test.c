@@ -105,11 +105,11 @@ void *send_t_items(void *args) {
 
 	int tmp = 0;
 	while (tmp != -1) {
-		sem_wait(full);
-		sem_wait(mutex);
+		sem_wait(&full);
+		sem_wait(&mutex);
 		tmp = do_get();
-		sem_post(mutex);
-		sem_post(empty);
+		sem_post(&mutex);
+		sem_post(&empty);
 		if (tmp != -1) {
 			printf("Consumer%d - Item: %d is extracted.\n", id, tmp);
 		}
