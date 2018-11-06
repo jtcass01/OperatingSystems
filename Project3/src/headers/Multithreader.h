@@ -12,7 +12,7 @@
 #include "DoublyLinkedList.h"
 #include "Node.h"
 #include "FileParser.h"
-//#include "Work.h"
+#include "Work.h"
 
 /* Function Prototypes */
 void *sender_thread(void *);
