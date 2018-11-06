@@ -23,6 +23,59 @@ sem_t mutex;
 #define CMAX (10)
 int consumers = 1;
 
+typedef struct {
+	pthread_t thread;
+	int id;
+	sem_t empty;
+	sem_t full;
+	sem_t mutex;
+} Sender;
+
+Sender *sender_create(int id, sem_t empty, sem_t full, sem_t mutex) {
+	Sender *sender = malloc(sizeof(Sender));
+
+	if (sender == NULL) {
+		printf("Unable to allocate memory for sender.\n");
+
+		return NULL;
+	}
+
+#if DEBUG
+	printf("Successfully Allocated memory for Sender.  Initializing attributes...\n");
+#endif
+
+	// Intialize attributes.
+	sender->id = id;
+	sender->empty = empty;
+	sender->full = full;
+	sender->mutex = mutex;
+
+#if DEBUG
+	printf("Sender successfully allocated and intitialized.  Returning...\n");
+#endif
+
+	return sender;
+}
+
+void *send_items(void *args) {
+	Sender *sender = args;
+	int id = sender->id;
+
+	int tmp = 0;
+	while (tmp != -1) {
+		sem_wait(&full);
+		sem_wait(&mutex);
+		tmp = do_get();
+		sem_post(&mutex);
+		sem_post(&empty);
+		if (tmp != -1) {
+			printf("Consumer%d - Item: %d is extracted.\n", id, tmp);
+		}
+	}
+	return NULL;
+}
+
+
 void do_fill(int value) {
 	buffer[fill] = value;
 	fill++;
@@ -90,7 +143,8 @@ int main(int argc, char *argv[]) {
 	assert(consumers <= CMAX);
 
 	buffer = (int *)malloc(max * sizeof(int));
-	int i, con_ids[CMAX];
+	int i;
+	Sender senders[CMAX];
 
 	for (i = 0; i < max; i++) {
 		buffer[i] = 0;
@@ -100,17 +154,18 @@ int main(int argc, char *argv[]) {
 	sem_init(&full, 0, 0);    // 0 are full
 	sem_init(&mutex, 0, 1);   // mutex
 
-	pthread_t pid, cid[CMAX];
+	pthread_t pid;
 
 	create_pThread(&pid, NULL, producer, NULL);
 	for (i = 0; i < consumers; i++) {
-		con_ids[i] = i;
-		create_pThread(&cid[i], NULL, consumer, (con_ids + i));
+		sender[i] = sender_create(i, empty, full, mutex);
+		create_pThread(&(sender[i]->thread), NULL, send_items, (sender + i));
 	}
 
 	join_pThread(pid, NULL);
 	for (i = 0; i < consumers; i++) {
-		join_pThread(cid[i], NULL);
+		join_pThread((sender[i]->thread), NULL);
+		sender_destroy(sender[i]);
 	}
 
 	return 0;
