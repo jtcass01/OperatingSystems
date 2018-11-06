@@ -73,17 +73,27 @@ void dll_insert_tail(DoublyLinkedList *doublyList, Node *newNode) {
 	** author:      Jacob Taylor Cassady
 	** description: Inserts a node into the tail end of a DoublyLinkedList.
 	*/
-	if(doublyList->tail == NULL) {
-		doublyList->head = newNode;
-		doublyList->tail = newNode;
-		doublyList->size = 1;
+	Node *previous_entry = dll_find_node_by_word(doublyList, word_of_interest);
+
+	if (previous_entry == NULL) {
+		// If there is no previous entry, add it to the list.
+
+		if (doublyList->tail == NULL) {
+			doublyList->head = newNode;
+			doublyList->tail = newNode;
+			doublyList->size = 1;
+		} else {
+			doublyList->tail->nextNode = newNode;
+			newNode->previousNode = doublyList->tail;
+			newNode->nextNode = NULL;
+			doublyList->tail = newNode;
+			doublyList->size++;
+		}
 	} else {
-		doublyList->tail->nextNode = newNode;
-		newNode->previousNode = doublyList->tail;
-		newNode->nextNode = NULL;
-		doublyList->tail = newNode;
-		doublyList->size++;
+		// else if there is a previous entry, increment the count.
+		previous_entry->count++;
 	}
+
 }
 
 void dll_insert_head(DoublyLinkedList *doublyList, Node *newNode) {
@@ -92,16 +102,24 @@ void dll_insert_head(DoublyLinkedList *doublyList, Node *newNode) {
 	** author:      Jacob Taylor Cassady
 	** description: Inserts a node into the head end of a DoublyLinkedList.
 	*/
-	if(doublyList->head == NULL) {
-		doublyList->head = newNode;
-		doublyList->tail = newNode;
-		doublyList->size = 1;
+	Node *previous_entry = dll_find_node_by_word(doublyList, word_of_interest);
+
+	if (previous_entry == NULL) {
+		// If there is no previous entry, add it to the list.
+		if(doublyList->head == NULL) {
+			doublyList->head = newNode;
+			doublyList->tail = newNode;
+			doublyList->size = 1;
+		} else {
+			doublyList->head->previousNode = newNode;
+			newNode->nextNode = doublyList->head;
+			newNode->previousNode = NULL;
+			doublyList->head = newNode;
+			doublyList->size++;
+		}
 	} else {
-		doublyList->head->previousNode = newNode;
-		newNode->nextNode = doublyList->head;
-		newNode->previousNode = NULL;
-		doublyList->head = newNode;
-		doublyList->size++;
+		// else if there is a previous entry, increment the count.
+		previous_entry->count++;
 	}
 }
 
