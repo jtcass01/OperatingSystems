@@ -45,18 +45,26 @@ void *do_work(void *args) {
 
 	while (fscanf(data_buffer, "%s", word) != EOF) {
 		Node *word_node = create_node(word);
+		Node *previous_entry = dll_find_node_by_word(doublyList, word_node->word);
 
-		// Wait on empty and mutex.
-		sem_wait(&(work->empty));
-		sem_wait(&(work->mutex));
+		if (previous_entry == NULL) { // If no previous entry, create a new one.  Must wait on empty and post to full
+			// Wait on empty and mutex.
+			sem_wait(&(work->empty));
+			sem_wait(&(work->mutex));
 
-		// Insert work
-		dll_insert_tail(work->dll_buffer, word_node);
+			// Insert work
+			dll_insert_tail(work->dll_buffer, word_node);
 
-		// Post to mutex and full.
-		sem_post(&(work->mutex));
-		sem_post(&(work->full));
+			// Post to mutex and full.
+			sem_post(&(work->mutex));
+			sem_post(&(work->full));
+		} else { // Previous entry was found.  Only need to wait on mutex.
+			sem_wait(&(work->mutex));
 
+			previous_entry->count++;
+
+			sem_post(&(work->mutex));
+		}
 	}
 
 
@@ -100,6 +108,15 @@ void *send_items(void *args) {
 	Sender *sender = args;
 
 	printf("(S): BEGINING.\n");
+
+	sem_wait(&(sender->full));
+	sem_wait(&(sender->mutex));
+
+	Node *retrieved_node = dll_pop_head(sender->dll_buffer);
+	delete_node(retrieved_node);
+
+	sem_post(&(sender->mutex));
+	sem_post(&(sender->empty));
 
 	printf("(S): DONE.\n");
 

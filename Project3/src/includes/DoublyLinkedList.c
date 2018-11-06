@@ -73,27 +73,17 @@ void dll_insert_tail(DoublyLinkedList *doublyList, Node *newNode) {
 	** author:      Jacob Taylor Cassady
 	** description: Inserts a node into the tail end of a DoublyLinkedList.
 	*/
-	Node *previous_entry = dll_find_node_by_word(doublyList, newNode->word);
-
-	if (previous_entry == NULL) {
-		// If there is no previous entry, add it to the list.
-
-		if (doublyList->tail == NULL) {
-			doublyList->head = newNode;
-			doublyList->tail = newNode;
-			doublyList->size = 1;
-		} else {
-			doublyList->tail->nextNode = newNode;
-			newNode->previousNode = doublyList->tail;
-			newNode->nextNode = NULL;
-			doublyList->tail = newNode;
-			doublyList->size++;
-		}
+	if (doublyList->tail == NULL) {
+		doublyList->head = newNode;
+		doublyList->tail = newNode;
+		doublyList->size = 1;
 	} else {
-		// else if there is a previous entry, increment the count.
-		previous_entry->count++;
+		doublyList->tail->nextNode = newNode;
+		newNode->previousNode = doublyList->tail;
+		newNode->nextNode = NULL;
+		doublyList->tail = newNode;
+		doublyList->size++;
 	}
-
 }
 
 void dll_insert_head(DoublyLinkedList *doublyList, Node *newNode) {
