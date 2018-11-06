@@ -22,21 +22,12 @@ int main(int argc, char *argv[]) {
 	int bufferSize;
 
 	DoublyLinkedList *test_list = dll_create();
-	Node *test_node = create_node("Test 1");
-	Node *test_node2 = create_node("Test 2");
-	Node *test_node4 = create_node("Test 3");
-
-	dll_insert_tail(test_list, test_node);
-	dll_insert_tail(test_list, test_node2);
-	dll_insert_tail(test_list, test_node4);
 
 	dll_print(test_list);
 
 	Node *test_node3 = dll_pop_head(test_list);
 
 	dll_print(test_list);
-
-	delete_node(test_node3);
 
 	dll_destroy(test_list);
 
