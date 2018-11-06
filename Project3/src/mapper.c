@@ -27,6 +27,8 @@ int main(int argc, char *argv[]) {
 
 	Node *test_node3 = dll_pop_head(test_list);
 
+	print_node(test_node3);
+
 	dll_print(test_list);
 
 	dll_destroy(test_list);
