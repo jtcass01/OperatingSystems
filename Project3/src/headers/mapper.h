@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "FileParser.h"
 #include "DoublyLinkedList.h"
+#include "Multiprocessor.h"
 
 void process_command_file(char *, int);
 

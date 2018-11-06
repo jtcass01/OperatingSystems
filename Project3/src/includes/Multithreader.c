@@ -41,10 +41,12 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 	// Create worker threads.
 	Work *workers[file_list->size];
+	pthread_mutex_t worker_lock = PTHREAD_MUTEX_INITIALIZER;
 	Node *current_file = file_list->head;
 	DoublyLinkedList *dll_buffer = dll_create();
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
-		workers[thread_index] = work_create(dll_buffer, bufferSize, current_file->word);
+		//Create worker thread with given work load
+		workers[thread_index] = work_create(dll_buffer, bufferSize, current_file->word, worker_lock);
 		create_pThread(&(workers[thread_index]->thread), NULL, do_work, workers[thread_index]);
 
 		current_file = current_file->nextNode;

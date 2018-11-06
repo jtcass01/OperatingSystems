@@ -7,7 +7,7 @@
 #include "../headers/Work.h"
 
 /* Function Definitions */
-Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name) {
+Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name, pthread_mutex_t lock) {
 	Work *work_load = malloc(sizeof(Work));
 
 	if (work_load == NULL) {
@@ -24,6 +24,7 @@ Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name)
 	work_load->dll_buffer = dll_buffer;
 	work_load->file_name = strdup(file_name);
 	work_load->bufferSize = bufferSize;
+	work_load->lock = lock;
 
 	#if DEBUG
 		printf("Work successfully allocated and intitialized.  Returning...\n");
@@ -32,8 +33,7 @@ Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name)
 	return work_load;
 }
 
-void *do_work(void *arg) {
-	Work *work = arg;
+void *do_work(Work *work) {
 	printf("(W): %s BEGINING.\n", work->file_name);
 	// Open work file. Rewind buffer to beginning.
 	FILE *data_buffer = fopen(work->file_name, "r");
@@ -48,7 +48,10 @@ void *do_work(void *arg) {
 			// wait until unlocked.
 		}
 
+
+		lock_pThread(&work->lock);
 		dll_insert_tail(work->dll_buffer, word_node);
+		unlock_pThread(&work->lock);
 	}
 
 

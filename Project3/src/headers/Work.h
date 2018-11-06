@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
 
 /* User Created Headers */
 #include "constants.h"
@@ -16,12 +17,13 @@ typedef struct {
 	int bufferSize;
 	char *file_name;
 	pthread_t thread;
+	pthread_mutex_t lock;
 } Work;
 
 /* Function Prototypes */
-Work *work_create(DoublyLinkedList *, int, char *);
+Work *work_create(DoublyLinkedList *, int, char *, pthread_mutex_t);
 
-void *do_work(void *arg);
+void *do_work(Work *);
 
 void work_destroy(Work *);
 
