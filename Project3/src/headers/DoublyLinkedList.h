@@ -33,6 +33,9 @@ void dll_insert_tail(DoublyLinkedList *, Node *);
 void dll_insert_head(DoublyLinkedList *, Node *);
 // Inserts a node into the head end of a DoublyLinkedList.
 
+Node *dll_pop_head(DoublyLinkedList *);
+// Removes a node off the head end of a DoublyLinkedList.
+
 void dll_delete_node_by_word(DoublyLinkedList *, char *);
 // Searches for a Node within a DoublyLinkedList using a word identifier and deletes it if found.
 
@@ -47,9 +50,6 @@ void dll_swap_nodes(DoublyLinkedList*, Node *, Node *);
 
 void dll_insertion_sort(DoublyLinkedList *);
 // Sorts a DoublyLinkedList using the insertion sort algorithm.
-
-DoublyLinkedList *dll_merge_lists(DoublyLinkedList *, DoublyLinkedList *, DoublyLinkedList *);
-// Sorts two lists using insertion sort and merges them after into a new DoublyLinkedList.
 
 void dll_print(DoublyLinkedList *);
 // Prints information on a DoublyLinkedList and the nodes within.

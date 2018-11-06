@@ -106,17 +106,26 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t empty, sem_t full, sem
 
 void *send_items(void *args) {
 	Sender *sender = args;
+	int tmp = 0;
 
 	printf("(S): BEGINING.\n");
 
-	sem_wait(&(sender->full));
-	sem_wait(&(sender->mutex));
+	while (tmp != -1) {
+		sem_wait(&(sender->full));
+		sem_wait(&(sender->mutex));
 
-	Node *retrieved_node = dll_pop_head(sender->dll_buffer);
-	delete_node(retrieved_node);
+		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
 
-	sem_post(&(sender->mutex));
-	sem_post(&(sender->empty));
+		if (retrieved_node == NULL) {
+			tmp = -1;
+		} else {
+			delete_node(retrieved_node);
+		}
+
+		sem_post(&(sender->mutex));
+		sem_post(&(sender->empty));
+	}
+
 
 	printf("(S): DONE.\n");
 

@@ -120,13 +120,17 @@ Node *dll_pop_head(DoublyLinkedList *doublyList) {
 	** author:      Jacob Taylor Cassady
 	** description: Removes a node off the head end of a DoublyLinkedList.
 	*/
-	Node *headNode = doublyList->head;
-	
-	headNode->nextNode->previousNode = NULL;
-	doublyList->head = headNode->nextNode;
-	doublyList->size--;
+	if (doublyList->head == NULL) {
+		return NULL;
+	} else {
+		Node *headNode = doublyList->head;
 
-	return headNode;
+		headNode->nextNode->previousNode = NULL;
+		doublyList->head = headNode->nextNode;
+		doublyList->size--;
+
+		return headNode;
+	}
 	
 }
 

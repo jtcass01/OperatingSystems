@@ -51,10 +51,6 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	sem_init(&mutex, 0, 1);
 
 
-	// Create sender thread.
-	Sender *sender = sender_create(dll_buffer, empty, full, mutex);
-	create_pThread(&(sender->thread), NULL, send_items, sender);
-
 	// Create worker threads.
 	Work *workers[file_list->size];
 	Node *current_file = file_list->head;
@@ -65,6 +61,10 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 		current_file = current_file->nextNode;
 	}
+
+	// Create sender thread.
+	Sender *sender = sender_create(dll_buffer, empty, full, mutex);
+	create_pThread(&(sender->thread), NULL, send_items, sender);
 
 	// Join worker threads.
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
