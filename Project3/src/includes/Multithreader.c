@@ -35,7 +35,8 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 
 	// Create worker threads.
-	Work *workers[file_list->size];
+//	Work *workers[file_list->size];
+	Node *workers[file_list->size];//delete
 	Node *current_file = file_list->head;
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
 		//Create worker thread with given work load
