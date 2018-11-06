@@ -111,6 +111,7 @@ void *send_items(void *args) {
 	printf("(S): BEGINING.\n");
 
 	while (tmp != -1) {
+		printf("(S): waiting...\n");
 		sem_wait(&(sender->full));
 		sem_wait(&(sender->mutex));
 
@@ -122,6 +123,7 @@ void *send_items(void *args) {
 			delete_node(retrieved_node);
 		}
 
+		printf("(S): posting...\n");
 		sem_post(&(sender->mutex));
 		sem_post(&(sender->empty));
 	}

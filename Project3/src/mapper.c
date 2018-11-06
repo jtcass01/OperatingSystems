@@ -21,18 +21,6 @@ int main(int argc, char *argv[]) {
 	char *commandFile;
 	int bufferSize;
 
-	DoublyLinkedList *test_list = dll_create();
-
-	dll_print(test_list);
-
-	Node *test_node3 = dll_pop_head(test_list);
-
-	print_node(test_node3);
-
-	dll_print(test_list);
-
-	dll_destroy(test_list);
-
 	if (argc != 3) {
 		printf("Invalid number of command line arguments.\n");
 
