@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
 
 	buffer = (int *)malloc(max * sizeof(int));
 	int i;
-	Sender_t senders[CMAX];
+	Sender_t *senders[CMAX];
 
 	for (i = 0; i < max; i++) {
 		buffer[i] = 0;
