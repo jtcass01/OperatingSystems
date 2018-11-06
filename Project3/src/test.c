@@ -23,6 +23,49 @@ sem_t mutex;
 #define CMAX (10)
 int consumers = 1;
 
+void do_fill(int value) {
+	buffer[fill] = value;
+	fill++;
+	if (fill == max) {
+		fill = 0;
+	}
+}
+
+int do_get() {
+	int tmp = buffer[use];
+	use++;
+	if (use == max) {
+		use = 0;
+	}
+	return tmp;
+}
+
+void * producer(void *arg) {
+	int i;
+	for (i = 0; i < items; i++) {
+		sem_wait(&empty);
+		sem_wait(&mutex);
+		do_fill(i);
+		sem_post(&mutex);
+		sem_post(&full);
+		printf("Producer - Item: %d is inserted\n", i);
+	}
+
+
+	// end case
+	for (i = 0; i < consumers; i++) {
+		sem_wait(&empty);
+		sem_wait(&mutex);
+		do_fill(-1);
+		sem_post(&mutex);
+		sem_post(&full);
+	}
+
+	return NULL;
+}
+
+
+
 typedef struct {
 	pthread_t thread;
 	int id;
@@ -76,62 +119,6 @@ void *send_items(void *args) {
 }
 
 
-void do_fill(int value) {
-	buffer[fill] = value;
-	fill++;
-	if (fill == max) {
-		fill = 0;
-	}
-}
-
-int do_get() {
-	int tmp = buffer[use];
-	use++;
-	if (use == max) {
-		use = 0;
-	}
-	return tmp;
-}
-
-void * producer(void *arg) {
-	int i;
-	for (i = 0; i < items; i++) {
-		sem_wait(&empty);
-		sem_wait(&mutex);
-		do_fill(i);
-		sem_post(&mutex);
-		sem_post(&full);
-		printf("Producer - Item: %d is inserted\n", i);
-	}
-
-
-	// end case
-	for (i = 0; i < consumers; i++) {
-		sem_wait(&empty);
-		sem_wait(&mutex);
-		do_fill(-1);
-		sem_post(&mutex);
-		sem_post(&full);
-	}
-
-	return NULL;
-}
-
-void * consumer(void *arg) {
-	int tmp = 0;
-	while (tmp != -1) {
-		sem_wait(&full);
-		sem_wait(&mutex);
-		tmp = do_get();
-		sem_post(&mutex);
-		sem_post(&empty);
-		if (tmp != -1) {
-			printf("Consumer%d - Item: %d is extracted.\n", (*(int *)arg), tmp);
-		}
-	}
-	return NULL;
-}
-
 int main(int argc, char *argv[]) {
 	if (argc != 4) {
 		fprintf(stderr, "usage: %s <buffersize> <items> <consumers>\n", argv[0]);
@@ -158,14 +145,14 @@ int main(int argc, char *argv[]) {
 
 	create_pThread(&pid, NULL, producer, NULL);
 	for (i = 0; i < consumers; i++) {
-		sender[i] = sender_create(i, empty, full, mutex);
-		create_pThread(&(sender[i]->thread), NULL, send_items, (sender + i));
+		senders[i] = sender_create(i, empty, full, mutex);
+		create_pThread(&(senders[i]->thread), NULL, send_items, (senders + i));
 	}
 
 	join_pThread(pid, NULL);
 	for (i = 0; i < consumers; i++) {
-		join_pThread((sender[i]->thread), NULL);
-		sender_destroy(sender[i]);
+		join_pThread((senders[i]->thread), NULL);
+		sender_destroy(senders[i]);
 	}
 
 	return 0;
