@@ -45,7 +45,7 @@ void *do_work(void *args) {
 
 	while (fscanf(data_buffer, "%s", word) != EOF) {
 		Node *word_node = create_node(word);
-		Node *previous_entry = dll_find_node_by_word(doublyList, word_node->word);
+		Node *previous_entry = dll_find_node_by_word(data_buffer, word_node->word);
 
 		if (previous_entry == NULL) { // If no previous entry, create a new one.  Must wait on empty and post to full
 			// Wait on empty and mutex.
