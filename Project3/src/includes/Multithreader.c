@@ -1,6 +1,5 @@
 #include "../headers/Multithreader.h"
 
-
 void create_pThread(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg) {
 	int rc = pthread_create(thread, attr, start_routine, arg);
 	assert(rc == 0);
@@ -35,8 +34,7 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 
 	// Create worker threads.
-//	Work *workers[file_list->size];
-	Node *workers[file_list->size];//delete
+	Work *workers[file_list->size];
 	Node *current_file = file_list->head;
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
 		//Create worker thread with given work load

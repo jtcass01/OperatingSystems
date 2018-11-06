@@ -66,8 +66,8 @@ void * producer(void *arg) {
 
 
 typedef struct {
-	pthread_t thread;
 	int id;
+	pthread_t thread;
 	sem_t empty;
 	sem_t full;
 	sem_t mutex;
