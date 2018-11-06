@@ -1,12 +1,5 @@
 #include "../headers/Multithreader.h"
 
-void *sender_thread(void *arg) {
-	char *id = arg;
-	printf("(S): %s BEGINING\n", id);
-
-	printf("(S) %s: DONE\n", id);
-	return NULL;
-}
 
 void create_pThread(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg) {
 	int rc = pthread_create(thread, attr, start_routine, arg);
@@ -15,16 +8,6 @@ void create_pThread(pthread_t *thread, const pthread_attr_t *attr, void *(*start
 
 void join_pThread(pthread_t thread, void**value_ptr) {
 	int rc = pthread_join(thread, value_ptr);
-	assert(rc == 0);
-}
-
-void lock_pThread(pthread_mutex_t *mutex) {
-	int rc = pthread_mutex_lock(mutex);
-	assert(rc == 0);
-}
-
-void unlock_pThread(pthread_mutex_t *mutex) {
-	int rc = pthread_mutex_unlock(mutex);
 	assert(rc == 0);
 }
 
