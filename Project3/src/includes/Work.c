@@ -47,15 +47,15 @@ void *do_work(void *args) {
 		Node *word_node = create_node(word);
 
 		// Wait on empty and mutex.
-		sem_wait(&work->empty);
-		sem_wait(&work->mutex);
+		sem_wait(&(work->empty));
+		sem_wait(&(work->mutex));
 
 		// Insert work
 		dll_insert_tail(work->dll_buffer, word_node);
 
 		// Post to mutex and full.
-		sem_post(&work->mutex);
-		sem_post(&work->full);
+		sem_post(&(work->mutex));
+		sem_post(&(work->full));
 
 	}
 
