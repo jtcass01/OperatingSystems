@@ -99,7 +99,7 @@ Sender_t *sender_t_create(int id, sem_t empty, sem_t full, sem_t mutex) {
 	return sender;
 }
 
-void *send_items(void *args) {
+void *send_t_items(void *args) {
 	Sender_t *sender = args;
 	int id = sender->id;
 
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
 	create_pThread(&pid, NULL, producer, NULL);
 	for (i = 0; i < consumers; i++) {
 		senders[i] = sender_t_create(i, empty, full, mutex);
-		create_pThread(&(senders[i]->thread), NULL, send_items, (senders + i));
+		create_pThread(&(senders[i]->thread), NULL, send_t_items, (senders + i));
 	}
 
 	join_pThread(pid, NULL);
