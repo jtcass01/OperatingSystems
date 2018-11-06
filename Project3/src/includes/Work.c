@@ -48,6 +48,7 @@ void *do_work(void *args) {
 		Node *previous_entry = dll_find_node_by_word(work->dll_buffer, word_node->word);
 
 		if (previous_entry == NULL) { // If no previous entry, create a new one.  Must wait on empty and post to full
+			printf("(W): %s full waiting...\n", work->file_name);
 			// Wait on empty and mutex.
 			sem_wait(&(work->empty));
 			sem_wait(&(work->mutex));
@@ -55,14 +56,17 @@ void *do_work(void *args) {
 			// Insert work
 			dll_insert_tail(work->dll_buffer, word_node);
 
+			printf("(W): %s posting...\n", work->file_name);
 			// Post to mutex and full.
 			sem_post(&(work->mutex));
 			sem_post(&(work->full));
 		} else { // Previous entry was found.  Only need to wait on mutex.
+			printf("(W): %s waiting...\n", work->file_name);
 			sem_wait(&(work->mutex));
 
 			previous_entry->count++;
 
+			printf("(W): %s posting...\n", work->file_name);
 			sem_post(&(work->mutex));
 		}
 	}
