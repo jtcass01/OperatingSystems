@@ -114,6 +114,23 @@ void dll_insert_head(DoublyLinkedList *doublyList, Node *newNode) {
 }
 
 
+Node *dll_pop_head(DoublyLinkedList *doublyList) {
+	/*
+	** function:    dll_pop_head
+	** author:      Jacob Taylor Cassady
+	** description: Removes a node off the head end of a DoublyLinkedList.
+	*/
+	Node *headNode = doublyList->head;
+	
+	headNode->nextNode->previousNode = NULL;
+	doublyList->head = headNode->nextNode;
+	doublyList->size--;
+
+	return headNode;
+	
+}
+
+
 void dll_delete_node_by_word(DoublyLinkedList *doublyList, char *word_of_interest) {
 	/*
 	** function:    dll_delete_node_by_word
@@ -341,71 +358,6 @@ void dll_insertion_sort(DoublyLinkedList *doublyList) {
 	}
 }
 
-DoublyLinkedList *dll_merge_lists(DoublyLinkedList *merged_list, DoublyLinkedList *doublyList1, DoublyLinkedList *doublyList2) {
-	/*
-	** function:    dll_merge_lists
-	** author:      Jacob Taylor Cassady
-	** description: Sorts two lists using insertion sort and merges them after into a new DoublyLinkedList.
-	*/
-	// Sort the lists
-	dll_insertion_sort(doublyList1);
-	dll_insertion_sort(doublyList2);
-
-	DoublyLinkedList *smaller_list;
-	DoublyLinkedList *longer_list;
-
-	if(doublyList1->size < doublyList2->size) {
-		smaller_list = doublyList1;
-		longer_list = doublyList2;
-	} else {
-		smaller_list = doublyList2;
-		longer_list = doublyList1;
-	}
-
-	#if DEBUG
-		printf("Smaller List: ");
-		dll_print(smaller_list);
-		printf("Longer List: ");
-		dll_print(longer_list);
-		printf("Merged List: ");
-		dll_print(merged_list);
-	#endif
-
-	Node *small_ptr = smaller_list->head;
-	Node *long_ptr = longer_list->head;
-
-	while(small_ptr != NULL && long_ptr != NULL) {
-		// CASE Nodes in each list are equal.
-		if(compare_node_by_word(small_ptr, long_ptr) == 0) {
-			Node *matching_node = create_node("tmp");
-			copy_node(matching_node, small_ptr);
-			matching_node->count += long_ptr->count;
-
-			#if DEBUG
-				printf("\n\n!!! MATCHING NODE FOUND!!! ");
-				print_node(matching_node);
-			#endif
-			dll_insert_tail(merged_list, matching_node);
-
-			#if DEBUG
-				printf("Updated Merged List: ");
-				dll_print(merged_list);
-			#endif
-
-			small_ptr = small_ptr->nextNode;
-			long_ptr = long_ptr->nextNode;
-		// CASE Node in smaller list is less than node in longer list.
-		} else if (compare_node_by_word(small_ptr, long_ptr) < 0) {
-			small_ptr = small_ptr->nextNode;
-		// CASE Node in smaller list is greather than node in longer list.
-		} else {
-			long_ptr = long_ptr->nextNode;
-		}
-
-	}
-
-	return merged_list;
-}
 
 void dll_print(DoublyLinkedList *doublyList) {
 	/*
