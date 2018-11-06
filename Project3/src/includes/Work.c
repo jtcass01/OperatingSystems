@@ -93,7 +93,7 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t empty, sem_t full, sem
 		printf("Sender successfully allocated and intitialized.  Returning...\n");
 	#endif
 
-	return work_load;
+	return sender;
 }
 
 void *send_items(void *args) {
@@ -104,6 +104,7 @@ void *send_items(void *args) {
 	printf("(S): DONE.\n");
 
 	sender_destroy(sender);
+
 	return NULL;
 }
 

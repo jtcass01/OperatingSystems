@@ -33,7 +33,7 @@ typedef struct {
 
 /* Function Prototypes */
 // Work Functions
-Work *work_create(DoublyLinkedList *, int, char *, sem_t, sem_t, sem_t);
+Work *work_create(DoublyLinkedList *, char *, sem_t, sem_t, sem_t);
 void *do_work(void *);
 void work_destroy(Work *);
 
