@@ -33,7 +33,8 @@ Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name,
 	return work_load;
 }
 
-void *do_work(Work *work) {
+void *do_work(void *args) {
+	Work *work = args;
 	printf("(W): %s BEGINING.\n", work->file_name);
 	// Open work file. Rewind buffer to beginning.
 	FILE *data_buffer = fopen(work->file_name, "r");

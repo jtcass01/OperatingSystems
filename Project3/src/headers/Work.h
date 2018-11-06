@@ -10,6 +10,7 @@
 /* User Created Headers */
 #include "constants.h"
 #include "DoublyLinkedList.h"
+#include "Multithreader.h"
 
 /* Struct definitions */
 typedef struct {
@@ -23,7 +24,7 @@ typedef struct {
 /* Function Prototypes */
 Work *work_create(DoublyLinkedList *, int, char *, pthread_mutex_t);
 
-void *do_work(Work *);
+void *do_work(void *);
 
 void work_destroy(Work *);
 
