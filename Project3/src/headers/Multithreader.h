@@ -25,6 +25,4 @@ void lock_pThread(pthread_mutex_t *);
 
 void unlock_pThread(pthread_mutex_t *);
 
-void create_map_threads(char *, int);
-
 #endif
