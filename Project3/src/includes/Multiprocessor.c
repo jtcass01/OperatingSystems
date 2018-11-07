@@ -54,9 +54,9 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	dll_destroy(file_list);
 	dll_destroy(dll_buffer);
 
-	pthread_mutex_destroy(mutex);
-	sem_destroy(empty);
-	sem_destroy(full);
+	pthread_mutex_destroy(&mutex);
+	sem_destroy(&empty);
+	sem_destroy(&full);
 }
 
 void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
