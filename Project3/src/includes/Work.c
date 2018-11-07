@@ -134,10 +134,9 @@ void *send_items(void *args) {
 
 		// Pop a node off
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
-		// Do work with retrieved node
-		if (retrieved_node != NULL) {
-			dll_insert_tail(popped_nodes, retrieved_node);
-		}
+		dll_insert_tail(popped_nodes, retrieved_node);
+		printf("(S): Node popped -- Current popped list.\n");
+		dll_print(popped_nodes);
 
 		// Release lock, post to full.
 		printf("(S): Unlocking mutex.\n");
