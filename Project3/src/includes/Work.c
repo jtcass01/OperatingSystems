@@ -140,6 +140,9 @@ void *send_items(void *args) {
 		printf("(S): Node popped -- Current popped list.\n");
 		dll_print(popped_nodes);
 		currentSize = sender->dll_buffer->size;
+		if (currentSize == 0) {
+			printf("Popped all the nodes for now.");
+		}
 
 		// Release lock, post to full.
 		printf("(S): Unlocking mutex.\n");
