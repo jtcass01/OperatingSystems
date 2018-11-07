@@ -15,6 +15,6 @@
 #include "Multithreader.h"
 
 /* Function Prototypes */
-void create_map_processes(DoublyLinkedList *, int);
+//void create_map_processes(DoublyLinkedList *, int);
 
 #endif

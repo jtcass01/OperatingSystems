@@ -8,7 +8,7 @@
 #include "../headers/Multiprocessor.h"
 
 /* Function Defintions */
-void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
+/*void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 	#if DEBUG
 		printf("I am the parent process (pid: %d).  Beginning to create %d processes to serve each directory path.\n\n", getpid() ,directoryPaths->size);
 		dll_print(directoryPaths);
@@ -37,5 +37,5 @@ void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 		}
 	}
 
-	wait(NULL); /* parent will wait for the children to complete */
-}
+	wait(NULL);*/ /* parent will wait for the children to complete */
+//}
