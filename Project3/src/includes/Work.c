@@ -120,8 +120,9 @@ void *send_items(void *args) {
 	printf("(S): BEGINING.\n");
 
 	while (tmp != -1) {
-		printf("(S): waiting...\n");
+		printf("(S): waiting on full semaphore...\n");
 		sem_wait(sender->full);
+		printf("(S): waiting on full mutex semaphore...\n");
 		sem_wait(sender->mutex);
 
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
