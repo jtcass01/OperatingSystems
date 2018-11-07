@@ -6,10 +6,21 @@
 
 #include "../headers/Node.h"
 
+int get_word_length(char *string) {
+	i = 0;
+
+	while (*(string + i) != '\0') {
+		i++;
+	}
+
+	return i;
+}
+
+
 Node *create_node(char *string){
 	Node *newNode = malloc(sizeof(Node));
 
-	newNode->word = strdup(string);
+	newNode->word = strndup(string, get_word_length(string));
 	newNode->count = 1;
 	newNode->nextNode = NULL;
 	newNode->previousNode = NULL;
