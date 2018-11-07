@@ -46,7 +46,7 @@ void *do_work(void *args) {
 
 	while (fscanf(data_buffer, "%s", word) != EOF) {
 		Node *word_node = create_node(word);
-		/*
+		
 		// Acquire lock, sleep if full.
 		printf("(W %s): Locking mutex.\n", work->file_name);
 		lock_pThread_mutex(work->mutex);
@@ -60,7 +60,7 @@ void *do_work(void *args) {
 			printf("(W %s): Locking mutex.\n", work->file_name);
 			lock_pThread_mutex(work->mutex);
 		} while (work->dll_buffer->size == work->bufferSize);
-		*/
+		
 //		sem_wait(work->full);
 //		lock_pThread_mutex(work->mutex);
 
