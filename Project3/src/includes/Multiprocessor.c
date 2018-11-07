@@ -32,8 +32,8 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	}
 
 	// Create sender thread.
-//	Sender *sender = sender_create(dll_buffer, &empty, &full, &mutex);
-//	create_pThread(&(sender->thread), NULL, send_items, sender);
+	Sender *sender = sender_create(dll_buffer, &empty, &full, &mutex);
+	create_pThread(&(sender->thread), NULL, send_items, sender);
 
 	// Join worker threads.
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
@@ -41,7 +41,7 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	}
 
 	// Join sender thread.
-//	join_pThread(sender->thread, NULL);
+	join_pThread(sender->thread, NULL);
 
 	// Print file buffer
 	dll_print(dll_buffer);
