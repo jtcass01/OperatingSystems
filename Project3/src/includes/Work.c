@@ -56,7 +56,9 @@ void *do_work(void *args) {
 			// Insert work
 			dll_insert_tail(work->dll_buffer, word_node);
 
-			printf("(W): %s posting...\n", work->file_name);
+			printf("(W): Node inserted\n", work->file_name);
+			dll_print(work->dll_buffer);
+
 			// Post to mutex and full.
 			sem_post(work->mutex);
 			sem_post(work->full);
