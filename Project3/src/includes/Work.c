@@ -117,10 +117,10 @@ void *send_items(void *args) {
 	DoublyLinkedList *popped_nodes = dll_create();
 	printf("(S): BEGINING.\n");
 
-//	int i = 0;
+	int currentSize = 1;
 //	while (i++ < 2) {
 		// Acquire lock. Sleep if empty.
-	while (1) {
+	while (currentSize != 0) {
 		printf("(S): Locking mutex.\n");
 		pthread_mutex_lock(sender->mutex);
 		do {
@@ -139,6 +139,7 @@ void *send_items(void *args) {
 		dll_insert_tail(popped_nodes, retrieved_node);
 		printf("(S): Node popped -- Current popped list.\n");
 		dll_print(popped_nodes);
+		currentSize = sender->dll_buffer->size;
 
 		// Release lock, post to full.
 		printf("(S): Unlocking mutex.\n");
