@@ -11,13 +11,13 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 	// Create a buffer and semaphores for communication between sender and workers
 	DoublyLinkedList *dll_buffer = dll_create();
-	sem_t empty;
 	sem_t full;
+	sem_t empty;
 	pthread_mutex_t mutex;
 
 	// Create and initialize semaphores
-	sem_init(&empty, 0, bufferSize);
-	sem_init(&full, 0, 0);
+	sem_init(&full, 0, bufferSize);
+	sem_init(&empty, 0, 0);
 	pthread_mutex_init(&mutex, NULL);
 
 	// Create worker threads.
