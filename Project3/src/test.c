@@ -68,12 +68,12 @@ void * producer(void *arg) {
 typedef struct {
 	int id;
 	pthread_t thread;
-	sem_t empty;
-	sem_t full;
-	sem_t mutex;
+	sem_t *empty;
+	sem_t *full;
+	sem_t *mutex;
 } Sender_t;
 
-Sender_t *sender_t_create(int id, sem_t empty, sem_t full, sem_t mutex) {
+Sender_t *sender_t_create(int id, sem_t *empty, sem_t *full, sem_t *mutex) {
 	Sender_t *sender = malloc(sizeof(Sender_t));
 
 	if (sender == NULL) {
@@ -105,11 +105,11 @@ void *send_t_items(void *args) {
 
 	int tmp = 0;
 	while (tmp != -1) {
-		sem_wait(&full);
-		sem_wait(&mutex);
+		sem_wait(sender->full);
+		sem_wait(sender->mutex);
 		tmp = do_get();
-		sem_post(&mutex);
-		sem_post(&empty);
+		sem_post(sender->mutex);
+		sem_post(sender->empty);
 		if (tmp != -1) {
 			printf("Consumer%d - Item: %d is extracted.\n", id, tmp);
 		}
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 
 	create_pThread(&pid, NULL, producer, NULL);
 	for (i = 0; i < consumers; i++) {
-		senders[i] = sender_t_create(i, empty, full, mutex);
+		senders[i] = sender_t_create(i, &empty, &full, &mutex);
 		create_pThread(&(senders[i]->thread), NULL, send_t_items, senders[i]);
 	}
 
