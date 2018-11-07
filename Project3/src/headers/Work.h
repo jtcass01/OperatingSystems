@@ -11,6 +11,7 @@
 /* User Created Headers */
 #include "constants.h"
 #include "DoublyLinkedList.h"
+#include "Multithreader.h"
 
 /* Struct definitions */
 typedef struct {
