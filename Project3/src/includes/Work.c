@@ -138,7 +138,7 @@ void *send_items(void *args) {
 
 		// Pop a node off
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
-		currentSize = sender->dll_buffer->size;
+//		currentSize = sender->dll_buffer->size;
 		
 		// Release lock, post to full.
 		printf("(S): Unlocking mutex.\n");
@@ -149,6 +149,7 @@ void *send_items(void *args) {
 		// Consume item
 		printf("(S) : Node Retrieved = ");
 		print_node(retrieved_node);
+		delete_node(retrieved_node);
 	}
 
 
