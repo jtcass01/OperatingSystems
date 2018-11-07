@@ -46,7 +46,10 @@ void *do_work(void *args) {
 
 	while (fscanf(data_buffer, "%s", word) != EOF) {
 		Node *word_node = create_node(word);
-		
+		printf("Ready to place Node: ");
+		print_node(word_node);
+
+
 		// Acquire lock, sleep if full.
 		printf("(W %s): Locking mutex.\n", work->file_name);
 		lock_pThread_mutex(work->mutex);
@@ -75,8 +78,6 @@ void *do_work(void *args) {
 		pthread_mutex_unlock(work->mutex);
 		printf("(W %s): Posting to empty.\n", work->file_name);
 		sem_post(work->empty);
-		
-		printf("(W): Node inserted\n");
 	}
 
 
@@ -127,7 +128,7 @@ void *send_items(void *args) {
 	int currentSize = 1;
 //	while (i++ < 2) {
 		// Acquire lock. Sleep if empty.
-	while (currentSize != 0) {
+	while (1) {
 		
 		printf("(S): Locking mutex.\n");
 		pthread_mutex_lock(sender->mutex);
@@ -160,12 +161,8 @@ void *send_items(void *args) {
 		sem_post(sender->full);
 
 		// Consume item
-		dll_insert_tail(popped_nodes, retrieved_node);
-		printf("(S): Node popped -- Current popped list.\n");
-		dll_print(popped_nodes);
-		if (currentSize == 0) {
-			printf("Popped all the nodes for now.");
-		}
+		printf("(S) : Node Retrieved = ");
+		print_node(retrieved_node);
 	}
 
 
