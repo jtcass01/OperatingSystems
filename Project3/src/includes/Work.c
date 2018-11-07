@@ -61,21 +61,21 @@ void *do_work(void *args) {
 			lock_pThread_mutex(work->mutex);
 		} while (work->dll_buffer->size == work->bufferSize);
 		*/
-		sem_wait(work->full);
-		lock_pThread_mutex(work->mutex);
+//		sem_wait(work->full);
+//		lock_pThread_mutex(work->mutex);
 
 		// Insert work
 		dll_insert_tail(work->dll_buffer, word_node);
 
-		unlock_pThread_mutex(work->mutex);
-		sem_post(work->empty);
-		/*
+//		unlock_pThread_mutex(work->mutex);
+//		sem_post(work->empty);
+		
 		// Release lock, post to empty.
 		printf("(W %s): unlocking mutex.\n", work->file_name);
 		pthread_mutex_unlock(work->mutex);
 		printf("(W %s): Posting to empty.\n", work->file_name);
 		sem_post(work->empty);
-		*/
+		
 		printf("(W): Node inserted\n");
 	}
 
@@ -127,7 +127,7 @@ void *send_items(void *args) {
 //	while (i++ < 2) {
 		// Acquire lock. Sleep if empty.
 	while (currentSize != 0) {
-		/*
+		
 		printf("(S): Locking mutex.\n");
 		pthread_mutex_lock(sender->mutex);
 		do {
@@ -139,24 +139,24 @@ void *send_items(void *args) {
 
 			printf("(S): Locking mutex.\n");
 			pthread_mutex_lock(sender->mutex);
-		} while (sender->dll_buffer->size == 0);*/
+		} while (sender->dll_buffer->size == 0);
 
-		sem_wait(sender->empty);
-		lock_pThread_mutex(sender->mutex);
+//		sem_wait(sender->empty);
+//		lock_pThread_mutex(sender->mutex);
 
 		// Pop a node off
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
 		currentSize = sender->dll_buffer->size;
 
-		unlock_pThread_mutex(sender->mutex);
-		sem_post(sender->full);
+//		unlock_pThread_mutex(sender->mutex);
+//		sem_post(sender->full);
 
-		/*
+		
 		// Release lock, post to full.
 		printf("(S): Unlocking mutex.\n");
 		pthread_mutex_unlock(sender->mutex);
 		printf("(S): Posting to full.\n");
-		sem_post(sender->full);*/
+		sem_post(sender->full);
 
 		// Consume item
 		dll_insert_tail(popped_nodes, retrieved_node);
