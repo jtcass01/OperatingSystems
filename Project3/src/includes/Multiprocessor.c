@@ -40,9 +40,9 @@ void create_map_threads(char *directory_path, int bufferSize) {
 		join_pThread(workers[thread_index]->thread, NULL);
 	}
 
-	sem_wait(&mutex);
+	lock_pThread_mutex(&mutex);
 	dll_buffer->done = 1;
-	sem_post(&mutex);
+	unlock_pThread_mutex(&mutex);
 
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);

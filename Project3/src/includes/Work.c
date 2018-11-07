@@ -127,8 +127,8 @@ void *send_items(void *args) {
 		}
 
 		// Release lock, post to full.
-		pthread_mutex_unlock(work->mutex);
-		sem_post(work->full);
+		pthread_mutex_unlock(sender->mutex);
+		sem_post(sender->full);
 	}
 
 

@@ -33,12 +33,12 @@ typedef struct {
 
 /* Function Prototypes */
 // Work Functions
-Work *work_create(DoublyLinkedList *, char *, sem_t *, sem_t *, sem_t *);
+Work *work_create(DoublyLinkedList *, char *, sem_t *, sem_t *, pthread_mutex_t *);
 void *do_work(void *);
 void work_destroy(Work *);
 
 // Sender Functions
-Sender *sender_create(DoublyLinkedList *, sem_t *, sem_t *, sem_t *);
+Sender *sender_create(DoublyLinkedList *, sem_t *, sem_t *, pthread_mutex_t *);
 void *send_items(void *);
 void sender_destroy(Sender *);
 
