@@ -118,11 +118,10 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, s
 
 void *send_items(void *args) {
 	Sender *sender = args;
-	int tmp = 0;
 
 	printf("(S): BEGINING.\n");
 
-	while (tmp != -1) {
+	while (sender->dll_buffer->done != 1) {
 		printf("(S): waiting on full semaphore...\n");
 		sem_wait(sender->full);
 		printf("(S): waiting on mutex semaphore...\n");
@@ -130,10 +129,8 @@ void *send_items(void *args) {
 
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
 
-		if (retrieved_node == NULL) {
-			tmp = -1;
-		}
-		else {
+		if (retrieved_node != NULL) {
+			print_node(retrieved_node);
 			delete_node(retrieved_node);
 		}
 

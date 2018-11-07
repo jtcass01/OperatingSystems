@@ -38,6 +38,7 @@ DoublyLinkedList *dll_create(void){
 	doublyList->head = NULL;
 	doublyList->tail = NULL;
 	doublyList->size = 0;
+	doublyList->done = 0;
 
 	#if DEBUG
 		printf("DoublyLinkedList successfully allocated and intitialized.  Returning...\n");

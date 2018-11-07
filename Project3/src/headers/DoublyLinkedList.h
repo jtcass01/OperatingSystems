@@ -16,6 +16,7 @@ typedef struct {
 	Node *head;
 	Node *tail;
 	int size;
+	int done;
 } DoublyLinkedList;
 
 
