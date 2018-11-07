@@ -117,9 +117,10 @@ void *send_items(void *args) {
 	DoublyLinkedList *popped_nodes = dll_create();
 	printf("(S): BEGINING.\n");
 
-	int i = 0;
-	while (i++ < 2) {
+//	int i = 0;
+//	while (i++ < 2) {
 		// Acquire lock. Sleep if empty.
+	while (1) {
 		printf("(S): Locking mutex.\n");
 		pthread_mutex_lock(sender->mutex);
 		do {
@@ -145,6 +146,7 @@ void *send_items(void *args) {
 		printf("(S): Posting to full.\n");
 		sem_post(sender->full);
 	}
+//	}
 
 
 	printf("(S): DONE.\n");
