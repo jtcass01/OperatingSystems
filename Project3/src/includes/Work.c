@@ -118,7 +118,7 @@ void *send_items(void *args) {
 	printf("(S): BEGINING.\n");
 
 	int i = 0;
-	while (i++ < 15) {
+	while (i++ < 2) {
 		// Acquire lock. Sleep if empty.
 		printf("(S): Locking mutex.\n");
 		pthread_mutex_lock(sender->mutex);
