@@ -40,14 +40,15 @@ void create_map_threads(char *directory_path, int bufferSize) {
 		join_pThread(workers[thread_index]->thread, NULL);
 	}
 
-	lock_pThread_mutex(&mutex);
-	dll_buffer->done = 1;
-	unlock_pThread_mutex(&mutex);
+//	lock_pThread_mutex(&mutex);
+//	dll_buffer->done = 1;
+//	unlock_pThread_mutex(&mutex);
 
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
 
 	// Print file buffer
+	printf("Remaining items");
 	dll_print(dll_buffer);
 
 	// Destroy created dlls
