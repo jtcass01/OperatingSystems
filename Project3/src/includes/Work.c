@@ -146,7 +146,6 @@ void *send_items(void *args) {
 		printf("(S): Posting to full.\n");
 		sem_post(sender->full);
 	}
-//	}
 
 
 	printf("(S): DONE.\n");

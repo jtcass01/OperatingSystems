@@ -134,10 +134,16 @@ Node *dll_pop_head(DoublyLinkedList *doublyList) {
 		return NULL;
 	} else {
 		Node *headNode = doublyList->head;
-
 		headNode->nextNode->previousNode = NULL;
-		doublyList->head = headNode->nextNode;
 		doublyList->size--;
+
+		if (doublyList->size == 0) {
+			doublyList->head = NULL;
+			doublyList->tail = NULL;
+		}
+		else {
+			doublyList->head = headNode->nextNode;
+		}
 
 		return headNode;
 	}
