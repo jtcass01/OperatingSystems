@@ -8,9 +8,9 @@ CFLAGS = -pthread -Wall -g
 LIBS = -lpthread -lrt -lm
 
 # source files TEST
-#SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c includes/Multiprocessor.c test.c
+#SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c test.c
 # source files DEPLOYMENT
-SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c includes/Multiprocessor.c mapper.c
+SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c mapper.c
 
 # object files
 OBJS = $(SRCS:.c=.o)
