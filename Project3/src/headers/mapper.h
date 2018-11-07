@@ -14,12 +14,13 @@
 #include "Node.h"
 //#include "Multiprocessor.h"
 
-void process_command_file(char *, int);
 
 // Thread functions
 void *do_work(void *);
 void *send_items(void *);
 void create_map_threads(char *, int);
+void create_map_processes(DoublyLinkedList *, int);
+void process_command_file(char *, int);
 
 
 #endif
