@@ -7,7 +7,7 @@
 #include "../headers/Node.h"
 
 int get_word_length(char *string) {
-	i = 0;
+	int i = 0;
 
 	while (*(string + i) != '\0') {
 		i++;
