@@ -16,10 +16,11 @@
 typedef struct {
 	pthread_t thread;
 	DoublyLinkedList *dll_buffer;
+	int bufferSize;
 	char *file_name;
 	sem_t *empty;
 	sem_t *full;
-	sem_t *mutex;
+	pthread_mutex_t *mutex;
 } Work;
 
 typedef struct {
@@ -27,7 +28,7 @@ typedef struct {
 	DoublyLinkedList *dll_buffer;
 	sem_t *empty;
 	sem_t *full;
-	sem_t *mutex;
+	pthread_mutex_t *mutex;
 } Sender;
 
 /* Function Prototypes */

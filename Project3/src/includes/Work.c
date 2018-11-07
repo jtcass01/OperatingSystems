@@ -7,7 +7,7 @@
 #include "../headers/Work.h"
 
 /* Function Definitions */
-Work *work_create(DoublyLinkedList *dll_buffer, char *file_name, sem_t *empty, sem_t *full, sem_t *mutex) {
+Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name, sem_t *empty, sem_t *full, pthread_mutex_t *mutex) {
 	Work *work_load = malloc(sizeof(Work));
 
 	if (work_load == NULL) {
@@ -22,6 +22,7 @@ Work *work_create(DoublyLinkedList *dll_buffer, char *file_name, sem_t *empty, s
 
 	// Intialize attributes.
 	work_load->dll_buffer = dll_buffer;
+	work_load->bufferSize = bufferSize;
 	work_load->file_name = strdup(file_name);
 	work_load->empty = empty;
 	work_load->full = full;
@@ -45,36 +46,23 @@ void *do_work(void *args) {
 
 	while (fscanf(data_buffer, "%s", word) != EOF) {
 		Node *word_node = create_node(word);
-		Node *previous_entry = dll_find_node_by_word(work->dll_buffer, word_node->word);
 
-		if (previous_entry == NULL) { // If no previous entry, create a new one.  Must wait on empty and post to full
-			printf("(W): %s Waiting on full...\n", work->file_name);
-			// Wait on empty and mutex.
+		// Acquire lock, sleep if full.
+		lock_pThread_mutex(work->mutex);
+		do {
+			unlock_pThread_mutex(work->mutex);
 			sem_wait(work->full);
-			printf("(W): %s Waiting on mutex...\n", work->file_name);
-			sem_wait(work->mutex);
+			lock_pThread_mutex(work->mutex);
+		} while (work->dll_buffer->size == work->bufferSize);
 
-			// Insert work
-			dll_insert_tail(work->dll_buffer, word_node);
+		// Insert work
+		dll_insert_tail(work->dll_buffer, word_node);
 
-			printf("(W): Node inserted\n");
-			dll_print(work->dll_buffer);
+		// Release lock, post to empty.
+		pthread_mutex_unlock(work->mutex);
+		sem_post(work->empty);
 
-			// Post to mutex and full.
-			printf("(W): %s Posting to mutex...\n", work->file_name);
-			sem_post(work->mutex);
-			printf("(W): %s Posting to empty...\n", work->file_name);
-			sem_post(work->empty);
-		}
-		else { // Previous entry was found.  Only need to wait on mutex.
-			printf("(W): %s waiting...\n", work->file_name);
-			sem_wait(work->mutex);
-
-			previous_entry->count++;
-
-			printf("(W): %s posting...\n", work->file_name);
-			sem_post(work->mutex);
-		}
+		printf("(W): Node inserted\n");
 	}
 
 
@@ -89,7 +77,7 @@ void work_destroy(Work *work_load) {
 	free(work_load);
 }
 
-Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, sem_t *mutex) {
+Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, pthread_mutex_t *mutex) {
 	Sender *sender = malloc(sizeof(Sender));
 
 	if (sender == NULL) {
@@ -122,22 +110,25 @@ void *send_items(void *args) {
 	printf("(S): BEGINING.\n");
 
 	while (sender->dll_buffer->done != 1) {
-		printf("(S): waiting on empty semaphore...\n");
-		sem_wait(sender->empty);
-		printf("(S): waiting on mutex semaphore...\n");
-		sem_wait(sender->mutex);
+		// Acquire lock. Sleep if empty.
+		pthread_mutex_lock(sender->mutex);
+		do {
+			pthread_mutex_unlock(sender->mutex);
+			sem_wait(sender->empty);
+			pthread_mutex_lock(sender->mutex);
+		} while (sender->dll_buffer->size == 0);
 
+		// Pop a node off
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
-
+		// Do work with retrieved node
 		if (retrieved_node != NULL) {
 			print_node(retrieved_node);
 			delete_node(retrieved_node);
 		}
 
-		printf("(S): posting to mutex...\n");
-		sem_post(sender->mutex);
-		printf("(S): posting to full...\n");
-		sem_post(sender->full);
+		// Release lock, post to full.
+		pthread_mutex_unlock(work->mutex);
+		sem_post(work->full);
 	}
 
 

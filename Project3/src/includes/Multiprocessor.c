@@ -13,19 +13,19 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	DoublyLinkedList *dll_buffer = dll_create();
 	sem_t empty;
 	sem_t full;
-	sem_t mutex;
+	pthread_mutex_t mutex;
 
 	// Create and initialize semaphores
 	sem_init(&empty, 0, bufferSize);
 	sem_init(&full, 0, 0);
-	sem_init(&mutex, 0, 1);
+	pthread_mutex_init(&mutex, NULL);
 
 	// Create worker threads.
 	Work *workers[file_list->size];
 	Node *current_file = file_list->head;
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
 		//Create worker thread with given work load
-		workers[thread_index] = work_create(dll_buffer, current_file->word, &empty, &full, &mutex);
+		workers[thread_index] = work_create(dll_buffer, bufferSize, current_file->word, &empty, &full, &mutex);
 		create_pThread(&(workers[thread_index]->thread), NULL, do_work, workers[thread_index]);
 
 		current_file = current_file->nextNode;
@@ -53,6 +53,10 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	// Destroy created dlls
 	dll_destroy(file_list);
 	dll_destroy(dll_buffer);
+
+	pthread_mutex_destroy(mutex);
+	sem_destroy(empty);
+	sem_destroy(full);
 }
 
 void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
