@@ -3,11 +3,16 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "constants.h"
 #include "FileParser.h"
 #include "DoublyLinkedList.h"
-#include "Multiprocessor.h"
+#include "Multithreader.h"
+#include "Node.h"
+//#include "Multiprocessor.h"
 
 void process_command_file(char *, int);
 
