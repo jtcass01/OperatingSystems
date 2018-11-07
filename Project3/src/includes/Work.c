@@ -114,7 +114,7 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 
 void *send_items(void *args) {
 	Sender *sender = args;
-
+	DoublyLinkedList *popped_nodes = dll_create();
 	printf("(S): BEGINING.\n");
 
 	while (sender->dll_buffer->done != 1) {
@@ -136,8 +136,7 @@ void *send_items(void *args) {
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
 		// Do work with retrieved node
 		if (retrieved_node != NULL) {
-			print_node(retrieved_node);
-			delete_node(retrieved_node);
+			dll_insert_tail(popped_nodes, retrieved_node);
 		}
 
 		// Release lock, post to full.
@@ -149,6 +148,9 @@ void *send_items(void *args) {
 
 
 	printf("(S): DONE.\n");
+
+	dll_print(popped_nodes);
+	dll_destroy(popped_nodes);
 
 	sender_destroy(sender);
 
