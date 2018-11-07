@@ -12,7 +12,6 @@
 #include "DoublyLinkedList.h"
 #include "Multithreader.h"
 #include "Node.h"
-//#include "Multiprocessor.h"
 
 
 // Thread functions
