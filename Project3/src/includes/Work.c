@@ -48,9 +48,9 @@ void *do_work(void *args) {
 		Node *previous_entry = dll_find_node_by_word(work->dll_buffer, word_node->word);
 
 		if (previous_entry == NULL) { // If no previous entry, create a new one.  Must wait on empty and post to full
-			printf("(W): %s Waiting on empty...\n", work->file_name);
+			printf("(W): %s Waiting on full...\n", work->file_name);
 			// Wait on empty and mutex.
-			sem_wait(work->empty);
+			sem_wait(work->full);
 			printf("(W): %s Waiting on mutex...\n", work->file_name);
 			sem_wait(work->mutex);
 
@@ -63,8 +63,8 @@ void *do_work(void *args) {
 			// Post to mutex and full.
 			printf("(W): %s Posting to mutex...\n", work->file_name);
 			sem_post(work->mutex);
-			printf("(W): %s Posting to full...\n", work->file_name);
-			sem_post(work->full);
+			printf("(W): %s Posting to empty...\n", work->file_name);
+			sem_post(work->empty);
 		}
 		else { // Previous entry was found.  Only need to wait on mutex.
 			printf("(W): %s waiting...\n", work->file_name);
@@ -122,8 +122,8 @@ void *send_items(void *args) {
 	printf("(S): BEGINING.\n");
 
 	while (sender->dll_buffer->done != 1) {
-		printf("(S): waiting on full semaphore...\n");
-		sem_wait(sender->full);
+		printf("(S): waiting on empty semaphore...\n");
+		sem_wait(sender->empty);
 		printf("(S): waiting on mutex semaphore...\n");
 		sem_wait(sender->mutex);
 
@@ -134,10 +134,10 @@ void *send_items(void *args) {
 			delete_node(retrieved_node);
 		}
 
-		printf("(S): posting to empty...\n");
-		sem_post(sender->empty);
 		printf("(S): posting to mutex...\n");
 		sem_post(sender->mutex);
+		printf("(S): posting to full...\n");
+		sem_post(sender->full);
 	}
 
 
