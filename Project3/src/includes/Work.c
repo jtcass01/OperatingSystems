@@ -82,7 +82,8 @@ void *do_work(void *args) {
 
 	printf("(W): %s DONE.\n", work->file_name);
 	work_destroy(work);
-	return NULL;
+	pthread_exit(0);
+//	return NULL;
 }
 
 
@@ -175,7 +176,8 @@ void *send_items(void *args) {
 
 	sender_destroy(sender);
 
-	return NULL;
+	pthread_exit(0);
+	//	return NULL;
 }
 
 
