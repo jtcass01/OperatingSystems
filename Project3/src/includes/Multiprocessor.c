@@ -13,36 +13,34 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	DoublyLinkedList *dll_buffer = dll_create();
 	sem_t full;
 	sem_t empty;
-	pthread_mutex_t mutex;
+	pthread_mutex_t c_mutex;
+	pthread_mutex_t p_mutex;
 
 	// Create and initialize semaphores
 	sem_init(&full, 0, bufferSize);
 	sem_init(&empty, 0, 0);
-	pthread_mutex_init(&mutex, NULL);
+	pthread_mutex_init(&c_mutex, NULL);
+	pthread_mutex_init(&p_mutex, NULL);
 
 	// Create worker threads.
 	Work *workers[file_list->size];
 	Node *current_file = file_list->head;
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
 		//Create worker thread with given work load
-		workers[thread_index] = work_create(dll_buffer, bufferSize, current_file->word, &empty, &full, &mutex);
+		workers[thread_index] = work_create(dll_buffer, bufferSize, current_file->word, &empty, &full, &c_mutex, &p_mutex);
 		create_pThread(&(workers[thread_index]->thread), NULL, do_work, workers[thread_index]);
 
 		current_file = current_file->nextNode;
 	}
 
 	// Create sender thread.
-	Sender *sender = sender_create(dll_buffer, &empty, &full, &mutex);
+	Sender *sender = sender_create(dll_buffer, &empty, &full, &c_mutex, &p_mutex);
 	create_pThread(&(sender->thread), NULL, send_items, sender);
 
 	// Join worker threads.
 	for (int thread_index = 0; thread_index < file_list->size; thread_index++) {
 		join_pThread(workers[thread_index]->thread, NULL);
 	}
-
-//	lock_pThread_mutex(&mutex);
-//	dll_buffer->done = 1;
-//	unlock_pThread_mutex(&mutex);
 
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);

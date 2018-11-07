@@ -1,9 +1,5 @@
 #include "headers/mapper.h"
 
-sem_t empty;
-sem_t full;
-sem_t mutex;
-
 void process_command_file(char *commandFile, int bufferSize) {
 	/*
 	Function Description: The first step of the project is to
