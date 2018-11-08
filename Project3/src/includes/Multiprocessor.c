@@ -40,6 +40,8 @@ void create_map_threads(char *directory_path, int bufferSize) {
 		join_pThread(workers[thread_index]->thread, NULL);
 	}
 
+	printf("Worker threads joined.\n");
+
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
 
