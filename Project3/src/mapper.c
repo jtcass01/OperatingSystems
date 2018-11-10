@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 	int bufferSize;
 
 	if (argc != 3) {
-		printf("Invalid number of command line arguments.\n");
+		printf("Usage: ./mapper [commandFile] [bufferSize]\n");
 
 		return 1;
 	} else {
@@ -38,4 +38,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-
