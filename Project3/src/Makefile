@@ -8,23 +8,21 @@ CFLAGS = -pthread -Wall -g
 LIBS = -lpthread -lrt -lm
 
 # source files TEST
-#SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c includes/Multiprocessor.c test.c
+REDUCER_SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c includes/Multiprocessor.c includes/Message.c reducer.c
 # source files DEPLOYMENT
-SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c includes/Multiprocessor.c mapper.c
+MAPPER_SRCS = includes/FileParser.c includes/DoublyLinkedList.c includes/Node.c includes/Work.c includes/Multithreader.c includes/Multiprocessor.c includes/Message.c mapper.c
 
 # object files
-OBJS = $(SRCS:.c=.o)
+REDUCER_OBJS = $(REDUCER_SRCS:.c=.o)
+MAPPER_OBJS = $(MAPPER_SRCS:.c=.o)
 
-# target TEST
-#TARG = test
-# target DEPLOYMENT
-TARG = mapper
+all: reducer mapper
 
-all: $(TARG)
+reducer:$(REDUCER_OBJS)
+	$(CC) -o reducer $(REDUCER_OBJS) $(LIBS)
 
-# generates the target executable
-$(TARG):$(OBJS)
-	$(CC) -o $(TARG) $(OBJS) $(LIBS)
+mapper:$(MAPPER_OBJS)
+	$(CC) -o mapper $(MAPPER_OBJS) $(LIBS)
 
 # generates the object files
 %.o: %.c
@@ -32,4 +30,5 @@ $(TARG):$(OBJS)
 
 # cleans stuff
 clean:
-	rm -f $(OBJS) $(TARG) *~
+	rm -f $(REDUCER_OBJS) reducer *~
+	rm -f $(MAPPER_OBJS) mapper *~
