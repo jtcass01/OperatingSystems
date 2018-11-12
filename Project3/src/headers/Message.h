@@ -13,10 +13,13 @@
 #include "DoublyLinkedList.h"
 #include "Node.h"
 
-struct message_struct {
+typedef struct message_struct {
   long mtype;
-  Node *node;
-};
+  char word[MAXWORDSIZE];
+} Message;
+
+Message *create_node_message(Node *);
+void delete_message(Message *);
 
 typedef struct {
     key_t key;
@@ -25,9 +28,9 @@ typedef struct {
 } MessageQueueConnection;
 
 MessageQueueConnection *create_message_queue_connection(char *, int);
-void send_node(MessageQueueConnection *, Node *);
-Node *recieve_node(MessageQueueConnection *);
-void end_msq_connection(MessageQueueConnection *);
 void destroy_message_queue_connection(MessageQueueConnection *);
+void send_node(MessageQueueConnection *, Node *);
+Node *receive_node(MessageQueueConnection *);
+void end_msq_connection(MessageQueueConnection *);
 
 #endif

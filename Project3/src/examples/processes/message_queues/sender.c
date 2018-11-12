@@ -1,39 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
+#include "headers/message_queue.h"
 
 #define MESSAGESIZE 128
 
-struct message_s {
-  long type;
-  char content[MESSAGESIZE];
-};
-
 int main(void) {
-  struct message_s message;
-  int message_queue_id;
-  key_t key;
+  MessageQueueConnection *msq_connection = create_message_queue_connection("sender.c", 1);
 
-  if ((key = ftok("sender.c", 1)) == -1) {
-    perror("ftok");
-    exit(1);
-  }
+  Node *test_node = create_node("Hello world : )\n");
 
-  if ((message_queue_id = msgget(key, 0644 | IPC_CREAT)) == -1) {
-    perror("msgget");
-    exit(1);
-  }
+  send_node(msq_connection, test_node);
 
-  message.type = 1;
-  strcpy(message.content, "Studying Operating Systems Is Fun!\n");
-
-  if(msgsnd(message_queue_id, &message, MESSAGESIZE, 0) == -1) {
-    perror("Error in msgsnd");
-  }
+  destroy_message_queue_connection(msq_connection);
+  delete_node(test_node);
 
   return 0;
 }

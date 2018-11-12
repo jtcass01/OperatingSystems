@@ -68,7 +68,7 @@ void *do_work(void *args) {
 		// Insert work
 		dll_insert_tail(work->dll_buffer, word_node);
 
-		
+
 		// Release lock, post to empty.
 		printf("(W %s): unlocking mutex.\n", work->file_name);
 		pthread_mutex_unlock(work->mutex);
@@ -107,6 +107,7 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 	sender->empty = empty;
 	sender->full = full;
 	sender->mutex = mutex;
+	sender->msq_connection = create_message_queue_connection("mapper.c", 1);
 
 	#if DEBUG
 		printf("Sender successfully allocated and intitialized.  Returning...\n");
@@ -122,7 +123,7 @@ void *send_items(void *args) {
 	printf("(S): BEGINING.\n");
 
 	while (1) {
-		
+
 		printf("(S): Locking mutex.\n");
 		pthread_mutex_lock(sender->mutex);
 		do {
@@ -136,10 +137,13 @@ void *send_items(void *args) {
 			pthread_mutex_lock(sender->mutex);
 		} while (sender->dll_buffer->size == 0);
 
-		// Pop a node off
+		// Pop a node off and send it across the message queue
 		Node *retrieved_node = dll_pop_head(sender->dll_buffer);
-//		currentSize = sender->dll_buffer->size;
-		
+		for(int i = 0; i < retrieved_node->count; i++) {
+			send_node(sender->msq_connection, retrieved_node);
+		}
+
+
 		// Release lock, post to full.
 		printf("(S): Unlocking mutex.\n");
 		pthread_mutex_unlock(sender->mutex);
@@ -166,5 +170,6 @@ void *send_items(void *args) {
 
 
 void sender_destroy(Sender *sender) {
+	destroy_message_queue_connection(sender->msq_connection);
 	free(sender);
 }

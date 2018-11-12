@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "DoublyLinkedList.h"
 #include "Multithreader.h"
+#include "Message.h"
 
 /* Struct definitions */
 typedef struct {
@@ -27,6 +28,7 @@ typedef struct {
 typedef struct {
 	pthread_t thread;
 	DoublyLinkedList *dll_buffer;
+	MessageQueueConnection *msq_connection;
 	sem_t *empty;
 	sem_t *full;
 	pthread_mutex_t *mutex;
