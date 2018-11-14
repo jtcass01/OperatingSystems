@@ -6,7 +6,7 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	retrieve_file_list(file_list, directory_path);
 
 	#if 1
-		printf("Creating a sender and working threads for file_list: "); dll_print(file_list);
+		printf("(M %s) : Creating a sender and working threads for file_list: ", directory_path); dll_print(file_list);
 	#endif
 
 	// Create a buffer and semaphores for communication between sender and workers
@@ -40,30 +40,30 @@ void create_map_threads(char *directory_path, int bufferSize) {
 		join_pThread(workers[thread_index]->thread, NULL);
 	}
 
-	printf("(M) Worker threads joined... locking mutex\n");
+	printf("(M %s) : Worker threads joined... locking mutex\n", directory_path);
 	lock_pThread_mutex(&mutex);
 	dll_buffer->done = 1;
 	unlock_pThread_mutex(&mutex);
-	printf("(M) dll_buffer done flag set.  Mutex is unlocked. Waiting on sender.\n");
+	printf("(M %s) : dll_buffer done flag set.  Mutex is unlocked. Waiting on sender.\n", directory_path);
 
-	printf("(M) Posting to full to possibly free up sender.\n");
+	printf("(M %s) : Posting to full to possibly free up sender.\n" , directory_path);
 	sem_post(&full);
-	printf("(M) Done posting to full.\n");
+	printf("(M %s) : Done posting to full.\n", directory_path);
 
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
 
 	// Destroy created dlls
-	printf("Sender joined. Destroying dlls\n");
+	printf("(M %s) : Sender joined. Destroying dlls\n", directory_path);
 	dll_destroy(file_list);
 	dll_destroy(dll_buffer);
 
-	printf("Destroying mutexes and semaphores\n");
+	printf("(M %s) : Destroying mutexes and semaphores\n", directory_path);
 	pthread_mutex_destroy(&mutex);
 	sem_destroy(&empty);
 	sem_destroy(&full);
 
-	printf("Ending create_map_threads.\n");
+	printf("(M %s) : Ending create_map_threads.\n", directory_path);
 }
 
 void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
