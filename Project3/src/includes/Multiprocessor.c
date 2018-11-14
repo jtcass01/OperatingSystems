@@ -53,17 +53,17 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
 
-	// Print file buffer
-	printf("Sender is joined.  Remaining items in the buffer: ");
-	dll_print(dll_buffer);
-
 	// Destroy created dlls
+	printf("Sender joined. Destroying dlls\n");
 	dll_destroy(file_list);
 	dll_destroy(dll_buffer);
 
+	printf("Destroying mutexes and semaphores\n");
 	pthread_mutex_destroy(&mutex);
 	sem_destroy(&empty);
 	sem_destroy(&full);
+
+	printf("Ending Microprocessor.\n");
 }
 
 void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
