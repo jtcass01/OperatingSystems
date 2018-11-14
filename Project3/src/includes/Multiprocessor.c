@@ -5,7 +5,7 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	DoublyLinkedList *file_list = dll_create();
 	retrieve_file_list(file_list, directory_path);
 
-	#if 1
+	#if DEBUG
 		printf("(M %s) : Creating a sender and working threads for file_list: ", directory_path); dll_print(file_list);
 	#endif
 
@@ -40,35 +40,52 @@ void create_map_threads(char *directory_path, int bufferSize) {
 		join_pThread(workers[thread_index]->thread, NULL);
 	}
 
-	printf("(M %s) : Worker threads joined... locking mutex\n", directory_path);
+	#if DEBUG
+		printf("(M %s) : Worker threads joined... locking mutex\n", directory_path);
+	#endif
+
 	lock_pThread_mutex(&mutex);
 	dll_buffer->done = 1;
 	unlock_pThread_mutex(&mutex);
-	printf("(M %s) : dll_buffer done flag set.  Mutex is unlocked. Waiting on sender.\n", directory_path);
 
-	printf("(M %s) : Posting to full to possibly free up sender.\n" , directory_path);
+	#if DEBUG
+		printf("(M %s) : dll_buffer done flag set.  Mutex is unlocked. Waiting on sender.\n", directory_path);
+		printf("(M %s) : Posting to full to possibly free up sender.\n" , directory_path);
+	#endif
+
 	sem_post(&full);
-	printf("(M %s) : Done posting to full.\n", directory_path);
+
+	#if DEBUG
+		printf("(M %s) : Done posting to full.\n", directory_path);
+	#endif
 
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
 
 	// Destroy created dlls
-	printf("(M %s) : Sender joined. Destroying dlls\n", directory_path);
+	#if DEBUG
+		printf("(M %s) : Sender joined. Destroying dlls\n", directory_path);
+	#endif
+
 	dll_destroy(file_list);
 	dll_destroy(dll_buffer);
 
-	printf("(M %s) : Destroying mutexes and semaphores\n", directory_path);
+	#if DEBUG
+		printf("(M %s) : Destroying mutexes and semaphores\n", directory_path);
+	#endif
+
 	pthread_mutex_destroy(&mutex);
 	sem_destroy(&empty);
 	sem_destroy(&full);
 
-	printf("(M %s) : Ending create_map_threads.\n", directory_path);
+	#if DEBUG
+		printf("(M %s) : Ending create_map_threads.\n", directory_path);
+	#endif
 }
 
 void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 
-	#if 1
+	#if DEBUG
 		printf("I am the parent process (pid: %d).  Beginning to create %d processes to serve each directory path.\n\n", getpid(), directoryPaths->size);
 		dll_print(directoryPaths);
 	#endif
@@ -76,22 +93,23 @@ void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 	// Initialize the parent process indicators to 0.  Start processes
 	for (int process_index = 0; process_index < directoryPaths->size; process_index++) {
 		if (fork() == 0) {
-			#if 1
+			#if DEBUG
 				printf("I am the child with pid = %d and process_index = %d, from parent = %d, BEGINNING WORK.\n", getpid(), process_index, getppid());
 			#endif
 
 			// Do work with processes
 			Node *process_node = dll_find_node_by_index(directoryPaths, process_index);
-			#if 1
+			#if DEBUG
 				printf("Creating map threads for directory: %s\n", process_node->word);
 			#endif
 
 			create_map_threads(process_node->word, bufferSize);
 
 			// exit child process
-			#if 1
+			#if DEBUG
 				printf("I am the child with pid = %d and process_index = %d, from parent = %d, DONE with %s.\n", getpid(), process_index, getppid(), process_node->word);
 			#endif
+
 			delete_node(process_node);
 
 			exit(0);
@@ -99,5 +117,8 @@ void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 	}
 
 	wait(NULL); /* parent will wait for the children to complete */
-	printf("All children are complete.\n");
+
+	#if DEBUG
+		printf("All children are complete.\n");
+	#endif
 }

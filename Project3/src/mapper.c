@@ -32,7 +32,9 @@ int main(int argc, char *argv[]) {
 		bufferSize = atoi(*(argv + 2));
 	}
 
-	printf("\tcommandFile: %s\n\tbufferSize: %d\n", commandFile, bufferSize);
+	#if DEBUG
+		printf("\tcommandFile: %s\n\tbufferSize: %d\n", commandFile, bufferSize);
+	#endif
 
 	process_command_file(commandFile, bufferSize);
 
