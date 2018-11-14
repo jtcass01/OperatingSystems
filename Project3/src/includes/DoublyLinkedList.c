@@ -135,7 +135,6 @@ Node *dll_pop_head(DoublyLinkedList *doublyList) {
 		return NULL;
 	} else {
 		Node *headNode = doublyList->head;
-		headNode->nextNode->previousNode = NULL;
 		doublyList->size--;
 
 		if (doublyList->size == 0) {
@@ -143,6 +142,7 @@ Node *dll_pop_head(DoublyLinkedList *doublyList) {
 			doublyList->tail = NULL;
 		}
 		else {
+			headNode->nextNode->previousNode = NULL;
 			doublyList->head = headNode->nextNode;
 		}
 
