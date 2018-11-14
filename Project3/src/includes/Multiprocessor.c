@@ -5,9 +5,9 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	DoublyLinkedList *file_list = dll_create();
 	retrieve_file_list(file_list, directory_path);
 
-#if DEBUG
-	dll_print(file_list);
-#endif
+	#if 1
+		printf("Creating a sender and working threads for file_list: "); dll_print(file_list);
+	#endif
 
 	// Create a buffer and semaphores for communication between sender and workers
 	DoublyLinkedList *dll_buffer = dll_create();
@@ -68,23 +68,23 @@ void create_map_threads(char *directory_path, int bufferSize) {
 
 void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 
-#if 1
-	printf("I am the parent process (pid: %d).  Beginning to create %d processes to serve each directory path.\n\n", getpid(), directoryPaths->size);
-	dll_print(directoryPaths);
-#endif
+	#if 1
+		printf("I am the parent process (pid: %d).  Beginning to create %d processes to serve each directory path.\n\n", getpid(), directoryPaths->size);
+		dll_print(directoryPaths);
+	#endif
 
 	// Initialize the parent process indicators to 0.  Start processes
 	for (int process_index = 0; process_index < directoryPaths->size; process_index++) {
 		if (fork() == 0) {
-#if 1
-			printf("I am the child with pid = %d and process_index = %d, from parent = %d, BEGINNING WORK.\n", getpid(), process_index, getppid());
-#endif
+			#if 1
+				printf("I am the child with pid = %d and process_index = %d, from parent = %d, BEGINNING WORK.\n", getpid(), process_index, getppid());
+			#endif
 
 			// Do work with processes
 			Node *process_node = dll_find_node_by_index(directoryPaths, process_index);
-#if 1
-			printf("Creating map threads for directory: %s\n", process_node->word);
-#endif
+			#if 1
+				printf("Creating map threads for directory: %s\n", process_node->word);
+			#endif
 			create_map_threads(process_node->word, bufferSize);
 
 			// exit child process
