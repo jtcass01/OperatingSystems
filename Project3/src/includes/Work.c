@@ -140,7 +140,9 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 	sender->empty = empty;
 	sender->full = full;
 	sender->mutex = mutex;
-	sender->msq_connection = create_message_queue_connection("mapper.c", 1);
+	#if LINUXENVIRONMENT
+		sender->msq_connection = create_message_queue_connection("mapper.c", 1);
+	#endif
 
 	#if DEBUG
 		printf("Sender successfully allocated and intitialized.  Returning...\n");
@@ -153,10 +155,10 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 void *send_items(void *args) {
 	Sender *sender = args;
 	DoublyLinkedList *popped_nodes = dll_create();
-	int done_flag = 0, semaphore_value;
+	int done_flag = 0, dll_size = 0, semaphore_value;
 	printf("(S): BEGINING.\n");
 
-	while (!done_flag) {
+	while (!done_flag && dll_size != 0) {
 		Node *retrieved_node;
 /*		printf("(S): Locking mutex.\n");
 		lock_pThread_mutex(sender->mutex);
@@ -187,23 +189,24 @@ void *send_items(void *args) {
 		lock_pThread_mutex(sender->mutex);
 		printf("(S): Mutex locked.\n");
 
-		while(sender->dll_buffer->size > 0){
-			// Pop a node off and send it across the message queue
-			retrieved_node = dll_pop_head(sender->dll_buffer);
+		// Pop a node off and send it across the message queue
+		retrieved_node = dll_pop_head(sender->dll_buffer);
+		printf("(S) : Sending retrieved node to message queue: "); print_node(retrieved_node);
 
-			printf("(S) : Sending retrieved node to message queue: "); print_node(retrieved_node);
-			for(int i = 0; i < retrieved_node->count; i++) {
+		// Send the node across the message queue
+		for(int i = 0; i < retrieved_node->count; i++) {
+			#if LINUXENVIRONMENT
 				send_node(sender->msq_connection, retrieved_node);
-			}
-			sem_post(sender->empty);
+			#endif
 		}
 
-		// Update done flag
+		// Update done_flag and dll_size
 		done_flag = sender->dll_buffer->done;
+		dll_size = sender->dll_buffer->size;
 
 		/*
 		// Release lock, post to full.
-d		printf("(S): Unlocking mutex.\n");
+		printf("(S): Unlocking mutex.\n");
 		unlock_pThread_mutex(sender->mutex);
 		printf("(S): Posting to full.\n");
 		sem_post(sender->full);*/
