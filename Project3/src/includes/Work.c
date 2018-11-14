@@ -120,10 +120,10 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 void *send_items(void *args) {
 	Sender *sender = args;
 	DoublyLinkedList *popped_nodes = dll_create();
+	int done_flag = 0;
 	printf("(S): BEGINING.\n");
 
-	while (1) {
-
+	while (!done_flag) {
 		printf("(S): Locking mutex.\n");
 		pthread_mutex_lock(sender->mutex);
 		do {
@@ -143,6 +143,7 @@ void *send_items(void *args) {
 			send_node(sender->msq_connection, retrieved_node);
 		}
 
+		done_flag = sender->dll_buffer->done;
 
 		// Release lock, post to full.
 		printf("(S): Unlocking mutex.\n");
@@ -157,7 +158,11 @@ void *send_items(void *args) {
 	}
 
 
-	printf("(S): DONE.\n");
+	Node *stop_node = create_node("%%%STOPTIME%%%");
+	printf("(S): DONE. Sending stop_node %s to reducer.\n", stop_node->word);
+	send_node(sender->msq_connection, stop_node);
+	delete_node(stop_node);
+
 
 	dll_print(popped_nodes);
 	dll_destroy(popped_nodes);

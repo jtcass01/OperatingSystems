@@ -79,7 +79,7 @@ void send_node(MessageQueueConnection *mq_connection, Node *node) {
     perror("Error in msgsnd");
     exit(1);
   } else {
-    printf("Message sent with following attributes: mtype: %d, word: %s\n", node_message->mtype, node_message->word);
+    printf("Message sent with following attributes: mtype: %ld, word: %s\n", node_message->mtype, node_message->word);
   }
 
   delete_message(node_message);
@@ -93,7 +93,7 @@ Node *receive_node(MessageQueueConnection *mq_connection) {
     perror("msgrcv");
     exit(1);
   } else {
-    printf("Message recieved with following attributes: mtype: %d, word: %s\n", received_message->mtype, received_message->word);
+    printf("Message recieved with following attributes: mtype: %ld, word: %s\n", received_message->mtype, received_message->word);
   }
 
   Node *received_node = create_node(received_message->word);

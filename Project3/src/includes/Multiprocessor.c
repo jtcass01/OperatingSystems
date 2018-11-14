@@ -40,13 +40,17 @@ void create_map_threads(char *directory_path, int bufferSize) {
 		join_pThread(workers[thread_index]->thread, NULL);
 	}
 
-	printf("Worker threads joined.\n");
+	printf("(M) Worker threads joined... locking mutex\n");
+	lock_pThread_mutex(&mutex);
+	dll_buffer->done = 1;
+	unlock_pThread_mutex(&mutex);
+	printf("(M) dll_buffer done flag set.  Mutex is unlocked. Waiting on sender.\n");
 
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
 
 	// Print file buffer
-	printf("Remaining items");
+	printf("Sender is joined.  Remaining items in the buffer: ");
 	dll_print(dll_buffer);
 
 	// Destroy created dlls
@@ -69,13 +73,13 @@ void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 		if (fork() == 0) {
 #if DEBUG
 			printf("I am the child with pid = %d and process_index = %d, from parent = %d, BEGINNING WORK.\n", getpid(), process_index, getppid());
-#endif		
+#endif
 
 			// Do work with processes
 			Node *process_node = dll_find_node_by_index(directoryPaths, process_index);
 #if DEBUG
 			printf("Creating map threads for directory: %s\n", process_node->word);
-#endif		
+#endif
 			create_map_threads(process_node->word, bufferSize);
 
 			// exit child process
