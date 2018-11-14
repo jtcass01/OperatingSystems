@@ -46,6 +46,10 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	unlock_pThread_mutex(&mutex);
 	printf("(M) dll_buffer done flag set.  Mutex is unlocked. Waiting on sender.\n");
 
+	printf("(M) Posting to full to possibly free up sender.\n");
+	sem_post(&full);
+	printf("(M) Done posting to full.\n");
+
 	// Join sender thread.
 	join_pThread(sender->thread, NULL);
 
