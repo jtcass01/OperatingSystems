@@ -31,7 +31,7 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 				strncat(full_path, "/", 1);
 				strncat(full_path, directory->d_name, MAXLINESIZE);
 				// Create a node to represent the file and add it to the file_list
-				File *data_buffer = fopen(full_path, "r");
+				FILE *data_buffer = fopen(full_path, "r");
 				if (data_buffer != NULL) {
 					int file_size = 0;
 					fseek(data_buffer, 0, SEEK_END);
