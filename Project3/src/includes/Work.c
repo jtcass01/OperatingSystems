@@ -158,7 +158,7 @@ void *send_items(void *args) {
 	int done_flag = 0, dll_size = 0, semaphore_value;
 	printf("(S): BEGINING.\n");
 
-	while (!done_flag && dll_size != 0) {
+	while (!done_flag || dll_size != 0) {
 		Node *retrieved_node;
 /*		printf("(S): Locking mutex.\n");
 		lock_pThread_mutex(sender->mutex);
