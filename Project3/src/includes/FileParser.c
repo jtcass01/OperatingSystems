@@ -38,7 +38,7 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 					file_size = ftell(data_buffer);
 
 					if(file_size == 0) {
-						#if 1
+						#if DEBUG
 							printf("%s found to be empty.\n", full_path);
 						#endif
 					} else {
@@ -46,7 +46,7 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 						Node *file_node = create_node(full_path);
 						dll_insert_tail(file_list, file_node);
 
-						#if 1
+						#if DEBUG
 							printf("%s added.\n", full_path);
 						#endif
 					}
