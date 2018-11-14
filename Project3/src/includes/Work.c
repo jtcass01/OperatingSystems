@@ -190,6 +190,7 @@ void *send_items(void *args) {
 		printf("(S): Mutex locked.\n");
 
 		// Pop a node off and send it across the message queue
+		printf("Retrieving node from dll: "); dll_print(sender->dll_buffer);
 		retrieved_node = dll_pop_head(sender->dll_buffer);
 
 		// Update done_flag and dll_size
