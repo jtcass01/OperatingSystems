@@ -131,6 +131,7 @@ Node *dll_pop_head(DoublyLinkedList *doublyList) {
 	** description: Removes a node off the head end of a DoublyLinkedList.
 	*/
 	if (doublyList->head == NULL) {
+		printf("Attempting to pop off a NULL list")
 		return NULL;
 	} else {
 		Node *headNode = doublyList->head;
@@ -147,7 +148,7 @@ Node *dll_pop_head(DoublyLinkedList *doublyList) {
 
 		return headNode;
 	}
-	
+
 }
 
 
@@ -197,7 +198,7 @@ Node *dll_find_node_by_index(DoublyLinkedList *doublyList, int index) {
 		return NULL;
 	} else {
 		Node *currentNode = doublyList->head;
-		
+
 		for (int node_index = 0; node_index < index; node_index++) {
 			currentNode = currentNode->nextNode;
 		}
