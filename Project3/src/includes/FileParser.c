@@ -31,12 +31,26 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 				strncat(full_path, "/", 1);
 				strncat(full_path, directory->d_name, MAXLINESIZE);
 				// Create a node to represent the file and add it to the file_list
-				Node *file_node = create_node(full_path);
-				dll_insert_tail(file_list, file_node);
+				File *data_buffer = fopen(full_path, "r");
+				if (data_buffer != NULL) {
+					int file_size = 0;
+					fseek(data_buffer, 0, SEEK_END);
+					file_size = ftell(fp);
 
-				#if DEBUG
-					printf("%s added.\n", full_path);
-				#endif
+					if(file_size == 0) {
+						#if 1
+							printf("%s found to be empty.\n", full_path);
+						#endif
+					} else {
+						Node *file_node = create_node(full_path);
+						dll_insert_tail(file_list, file_node);
+
+						#if 1
+							printf("%s added.\n", full_path);
+						#endif
+					}
+				}
+
 			}
 		}
 

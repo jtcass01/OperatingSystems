@@ -44,71 +44,60 @@ void *do_work(void *args) {
 	Work *work = args;
 	// Open work file. Rewind buffer to beginning.
 	FILE *data_buffer = fopen(work->file_name, "r");
+	rewind(data_buffer);
 
-	if (data_buffer != NULL) {
-		int file_size = 0;
-		fseek(data_buffer, 0, SEEK_END);
-		file_size = ftell(data_buffer);
+	char word[MAXWORDSIZE];
 
-		if(file_size == 0) {
-			; //File is empty, pass
-		} else {
-			rewind(data_buffer);
+	while (fscanf(data_buffer, "%s", word) != EOF) {
+		Node *word_node = create_node(word);
 
-			char word[MAXWORDSIZE];
+		#if DEBUG
+			printf("(W %s) Ready to place Node: ", work->file_name);
+			print_node(word_node);
 
-			while (fscanf(data_buffer, "%s", word) != EOF) {
-				Node *word_node = create_node(word);
+			printf("(W %s): Waiting on empty...  ", work->file_name);
+			sem_getvalue(work->empty, &semaphore_value);
+			printf("Current empty sempahore_value: %i.\n", semaphore_value);
+		#endif
 
-				#if DEBUG
-					printf("(W %s) Ready to place Node: ", work->file_name);
-					print_node(word_node);
+		sem_wait(work->empty);
 
-					printf("(W %s): Waiting on empty...  ", work->file_name);
-					sem_getvalue(work->empty, &semaphore_value);
-					printf("Current empty sempahore_value: %i.\n", semaphore_value);
-				#endif
+		#if DEBUG
+			printf("(W %s): Done waiting on empty...  ", work->file_name);
+			sem_getvalue(work->empty, &semaphore_value);
+			printf("Current empty sempahore_value: %i.\n", semaphore_value);
+			printf("(W %s): Locking mutex.\n", work->file_name);
+		#endif
 
-				sem_wait(work->empty);
+		lock_pThread_mutex(work->mutex);
 
-				#if DEBUG
-					printf("(W %s): Done waiting on empty...  ", work->file_name);
-					sem_getvalue(work->empty, &semaphore_value);
-					printf("Current empty sempahore_value: %i.\n", semaphore_value);
-					printf("(W %s): Locking mutex.\n", work->file_name);
-				#endif
+		#if DEBUG
+			printf("(W %s): Mutex locked.\n", work->file_name);
+		#endif
 
-				lock_pThread_mutex(work->mutex);
+		// Insert work
+		dll_insert_tail(work->dll_buffer, word_node);
 
-				#if DEBUG
-					printf("(W %s): Mutex locked.\n", work->file_name);
-				#endif
+		#if DEBUG
+			printf("(W %s): unlocking mutex.\n", work->file_name);
+		#endif
 
-				// Insert work
-				dll_insert_tail(work->dll_buffer, word_node);
+		unlock_pThread_mutex(work->mutex);
 
-				#if DEBUG
-					printf("(W %s): unlocking mutex.\n", work->file_name);
-				#endif
+		#if DEBUG
+			printf("(W %s): mutex unlocked.\n", work->file_name);
+			printf("(W %s): Posting to full...  ", work->file_name);
+			sem_getvalue(work->full, &semaphore_value);
+			printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#endif
 
-				unlock_pThread_mutex(work->mutex);
+		sem_post(work->full);
 
-				#if DEBUG
-					printf("(W %s): mutex unlocked.\n", work->file_name);
-					printf("(W %s): Posting to full...  ", work->file_name);
-					sem_getvalue(work->full, &semaphore_value);
-					printf("Current full sempahore_value: %i.\n", semaphore_value);
-				#endif
-
-				sem_post(work->full);
-
-				#if DEBUG
-					printf("(W %s): Finished posting to full.  ", work->file_name);
-					sem_getvalue(work->full, &semaphore_value);
-					printf("Current full sempahore_value: %i.\n", semaphore_value);
-				#endif
-			}
-		}
+		#if DEBUG
+			printf("(W %s): Finished posting to full.  ", work->file_name);
+			sem_getvalue(work->full, &semaphore_value);
+			printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#endif
 	}
 
 	#if DEBUG
