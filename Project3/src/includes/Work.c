@@ -48,7 +48,7 @@ void *do_work(void *args) {
 	if (data_buffer != NULL) {
 		int file_size = 0;
 		fseek(data_buffer, 0, SEEK_END);
-		file_size = ftell(fp);
+		file_size = ftell(data_buffer);
 
 		if(file_size == 0) {
 			; //File is empty, pass
