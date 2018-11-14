@@ -97,4 +97,5 @@ void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 	}
 
 	wait(NULL); /* parent will wait for the children to complete */
+	printf("All children are complete.\n");
 }
