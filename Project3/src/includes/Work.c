@@ -36,12 +36,13 @@ Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name,
 }
 
 void *do_work(void *args) {
+	Work *work = args;
+
 	#if DEBUG
 		int semaphore_value;
 		printf("(W): %s BEGINING.\n", work->file_name);
 	#endif
 
-	Work *work = args;
 	// Open work file. Rewind buffer to beginning.
 	FILE *data_buffer = fopen(work->file_name, "r");
 	rewind(data_buffer);
