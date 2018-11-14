@@ -245,6 +245,7 @@ void *send_items(void *args) {
 
 	sender_destroy(sender);
 
+	printf("(S): Exiting.\n");
 	pthread_exit(0);
 	//	return NULL;
 }
