@@ -47,70 +47,60 @@ void *do_work(void *args) {
 
 	while (fscanf(data_buffer, "%s", word) != EOF) {
 		Node *word_node = create_node(word);
-		printf("(W %s) Ready to place Node: ", work->file_name);
-		print_node(word_node);
 
+		#if DEBUG
+			printf("(W %s) Ready to place Node: ", work->file_name);
+			print_node(word_node);
 
-		/*
-		// Acquire lock, sleep if full.
-		printf("(W %s): Locking mutex.\n", work->file_name);
-		lock_pThread_mutex(work->mutex);
-		do {
-			printf("(W %s): unlocking mutex.\n", work->file_name);
-			unlock_pThread_mutex(work->mutex);
-
-			printf("(W %s): Waiting on full...\n", work->file_name);
-			sem_wait(work->full);
-
-			printf("(W %s): Locking mutex.\n", work->file_name);
-			lock_pThread_mutex(work->mutex);
-		} while (work->dll_buffer->size == work->bufferSize);
-		*/
-
-		printf("(W %s): Waiting on empty...  ", work->file_name);
-		sem_getvalue(work->empty, &semaphore_value);
-		printf("Current empty sempahore_value: %i.\n", semaphore_value);
+			printf("(W %s): Waiting on empty...  ", work->file_name);
+			sem_getvalue(work->empty, &semaphore_value);
+			printf("Current empty sempahore_value: %i.\n", semaphore_value);
+		#endif
 
 		sem_wait(work->empty);
 
-		printf("(W %s): Done waiting on empty...  ", work->file_name);
-		sem_getvalue(work->empty, &semaphore_value);
-		printf("Current empty sempahore_value: %i.\n", semaphore_value);
+		#if DEBUG
+			printf("(W %s): Done waiting on empty...  ", work->file_name);
+			sem_getvalue(work->empty, &semaphore_value);
+			printf("Current empty sempahore_value: %i.\n", semaphore_value);
+			printf("(W %s): Locking mutex.\n", work->file_name);
+		#endif
 
-
-		printf("(W %s): Locking mutex.\n", work->file_name);
 		lock_pThread_mutex(work->mutex);
-		printf("(W %s): Mutex locked.\n", work->file_name);
+
+		#if DEBUG
+			printf("(W %s): Mutex locked.\n", work->file_name);
+		#endif
 
 		// Insert work
 		dll_insert_tail(work->dll_buffer, word_node);
 
+		#if DEBUG
+			printf("(W %s): unlocking mutex.\n", work->file_name);
+		#endif
 
-		/*
-		// Release lock, post to empty.
-		printf("(W %s): unlocking mutex.\n", work->file_name);
 		unlock_pThread_mutex(work->mutex);
-		printf("(W %s): Posting to empty.\n", work->file_name);
-		sem_post(work->empty);*/
 
-		printf("(W %s): unlocking mutex.\n", work->file_name);
-		unlock_pThread_mutex(work->mutex);
-		printf("(W %s): mutex unlocked.\n", work->file_name);
-
-
-		printf("(W %s): Posting to full...  ", work->file_name);
-		sem_getvalue(work->full, &semaphore_value);
-		printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#if DEBUG
+			printf("(W %s): mutex unlocked.\n", work->file_name);
+			printf("(W %s): Posting to full...  ", work->file_name);
+			sem_getvalue(work->full, &semaphore_value);
+			printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#endif
 
 		sem_post(work->full);
 
-		printf("(W %s): Finished posting to full.  ", work->file_name);
-		sem_getvalue(work->full, &semaphore_value);
-		printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#if DEBUG
+			printf("(W %s): Finished posting to full.  ", work->file_name);
+			sem_getvalue(work->full, &semaphore_value);
+			printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#endif
 	}
 
+	#if DEBUG
+		printf("(W): %s DONE.\n", work->file_name);
+	#endif
 
-	printf("(W): %s DONE.\n", work->file_name);
 	work_destroy(work);
 	pthread_exit(0);
 //	return NULL;
@@ -140,6 +130,7 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 	sender->empty = empty;
 	sender->full = full;
 	sender->mutex = mutex;
+
 	#if LINUXENVIRONMENT
 		sender->msq_connection = create_message_queue_connection("mapper.c", 1);
 	#endif
@@ -155,75 +146,70 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 void *send_items(void *args) {
 	Sender *sender = args;
 	int done_flag = 0, dll_size = 0, semaphore_value;
-	printf("(S): BEGINING.\n");
+
+	#if DEBUG
+		printf("(S): BEGINING.\n");
+	#endif
 
 	while (!done_flag || dll_size != 0) {
 		Node *retrieved_node;
-/*		printf("(S): Locking mutex.\n");
-		lock_pThread_mutex(sender->mutex);
-		do {
-			printf("(S): Unlocking mutex.\n");
-			unlock_pThread_mutex(sender->mutex);
 
-			printf("(S): Waiting on empty.\n");
-			sem_wait(sender->empty);
-
-			printf("(S): Locking mutex.\n");
-			lock_pThread_mutex(sender->mutex);
-		} while (sender->dll_buffer->size == 0);*/
-		//wait on full
-
-		printf("(S): Waiting on full.  ");
-		sem_getvalue(sender->full, &semaphore_value);
-		printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#if DEBUG
+			printf("(S): Waiting on full.  ");
+			sem_getvalue(sender->full, &semaphore_value);
+			printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#endif
 
 		sem_wait(sender->full);
 
-		printf("(S): Done waiting on full.  ");
-		sem_getvalue(sender->full, &semaphore_value);
-		printf("Current full sempahore_value: %i.\n", semaphore_value);
+		#if DEBUG
+			printf("(S): Done waiting on full.  ");
+			sem_getvalue(sender->full, &semaphore_value);
+			printf("Current full sempahore_value: %i.\n", semaphore_value);
+			printf("(S): locking mutex.\n");
+		#endif
 
 		//lock mutex
-		printf("(S): locking mutex.\n");
 		lock_pThread_mutex(sender->mutex);
-		printf("(S): Mutex locked.\n");
 
-		// Pop a node off and send it across the message queue
-		printf("Retrieving node from dll: "); dll_print(sender->dll_buffer);
+		#if DEBUG
+			printf("(S): Mutex locked.\n");
+			printf("Retrieving node from dll: "); dll_print(sender->dll_buffer);
+		#endif
+
+		// Pop a node off to send across the message queue
 		retrieved_node = dll_pop_head(sender->dll_buffer);
 
 		// Update done_flag and dll_size
 		done_flag = sender->dll_buffer->done;
 		dll_size = sender->dll_buffer->size;
 
-		/*
-		// Release lock, post to full.
-		printf("(S): Unlocking mutex.\n");
+		#if DEBUG
+			printf("(S): Unlocking mutex.\n");
+		#endif
+
 		unlock_pThread_mutex(sender->mutex);
-		printf("(S): Posting to full.\n");
-		sem_post(sender->full);*/
-		//Wait on full semaphore
-		printf("(S): Unlocking mutex.\n");
-		unlock_pThread_mutex(sender->mutex);
-		printf("(S): mutex unlocked.\n");
+
+		#if DEBUG
+			printf("(S): mutex unlocked.\n");
+			printf("(S): Posting to empty. ");
+			sem_getvalue(sender->empty, &semaphore_value);
+			printf("Current empty sempahore_value: %i.\n", semaphore_value);
+		#endif
 
 
 		//post to full
-		printf("(S): Posting to empty. ");
-		sem_getvalue(sender->empty, &semaphore_value);
-		printf("Current empty sempahore_value: %i.\n", semaphore_value);
-
 		sem_post(sender->empty);
 
-		printf("(S): Done posting to empty. ");
-		sem_getvalue(sender->empty, &semaphore_value);
-		printf("Current empty sempahore_value: %i.\n", semaphore_value);
+		#if DEBUG
+			printf("(S): Done posting to empty. ");
+			sem_getvalue(sender->empty, &semaphore_value);
+			printf("Current empty sempahore_value: %i.\n", semaphore_value);
+			printf("(S) : Sending retrieved node to message queue: "); print_node(retrieved_node);
+			printf("\tCurrent dll_size = %d\n", dll_size);
+		#endif
 
-		// Consume item
-		printf("(S) : Sending retrieved node to message queue: "); print_node(retrieved_node);
-		printf("\tCurrent dll_size = %d\n", dll_size);
-
-		// Send the node across the message queue
+		// Consume item -- Send the node across the message queue
 		if(retrieved_node != NULL) {
 			for(int i = 0; i < retrieved_node->count; i++) {
 				#if LINUXENVIRONMENT
@@ -236,20 +222,29 @@ void *send_items(void *args) {
 	}
 
 
-	Node *stop_node = create_node("%%%STOPTIME%%%");
-	printf("(S): DONE. Sending stop_node %s to reducer.\n", stop_node->word);
 
 	#if LINUXENVIRONMENT
+		Node *stop_node = create_node("%%%STOPTIME%%%");
+
+		#if DEBUG
+			printf("(S): DONE. Sending stop_node %s to reducer.\n", stop_node->word);
+		#endif
+
 		send_node(sender->msq_connection, stop_node);
+		printf("(S): Deleting stop_node.\n");
+		delete_node(stop_node);
 	#endif
 
-	printf("(S): Deleting stop_node.\n");
-	delete_node(stop_node);
+	#if DEBUG
+		printf("(S): Destroying sender.\n");
+	#endif
 
-	printf("(S): Destroying sender.\n");
 	sender_destroy(sender);
 
-	printf("(S): Exiting.\n");
+	#if DEBUG
+		printf("(S): Exiting.\n");
+	#endif
+
 	pthread_exit(0);
 	//	return NULL;
 }
