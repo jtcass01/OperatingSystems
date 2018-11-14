@@ -16,8 +16,8 @@ void create_map_threads(char *directory_path, int bufferSize) {
 	pthread_mutex_t mutex;
 
 	// Create and initialize semaphores
-	sem_init(&full, 0, bufferSize);
-	sem_init(&empty, 0, 0);
+	sem_init(&empty, 0, bufferSize); // The whole buffer begins empty
+	sem_init(&full, 0, 0);					 // None of the buffer is full
 	pthread_mutex_init(&mutex, NULL);
 
 	// Create worker threads.
