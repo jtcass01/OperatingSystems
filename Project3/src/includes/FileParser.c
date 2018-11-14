@@ -35,7 +35,7 @@ void retrieve_file_list(DoublyLinkedList *file_list, char *directory_path) {
 				if (data_buffer != NULL) {
 					int file_size = 0;
 					fseek(data_buffer, 0, SEEK_END);
-					file_size = ftell(fp);
+					file_size = ftell(data_buffer);
 
 					if(file_size == 0) {
 						#if 1
