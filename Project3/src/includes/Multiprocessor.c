@@ -67,6 +67,7 @@ void create_map_threads(char *directory_path, int bufferSize) {
 }
 
 void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
+
 #if 1
 	printf("I am the parent process (pid: %d).  Beginning to create %d processes to serve each directory path.\n\n", getpid(), directoryPaths->size);
 	dll_print(directoryPaths);
