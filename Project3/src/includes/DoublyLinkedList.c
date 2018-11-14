@@ -131,7 +131,9 @@ Node *dll_pop_head(DoublyLinkedList *doublyList) {
 	** description: Removes a node off the head end of a DoublyLinkedList.
 	*/
 	if (doublyList->head == NULL) {
-		printf("\nWarning : Attempting to pop off a NULL list\n");
+		#if DEBUG
+			printf("\nWarning : Attempting to pop off a NULL list\n");
+		#endif
 		return NULL;
 	} else {
 		Node *headNode = doublyList->head;
