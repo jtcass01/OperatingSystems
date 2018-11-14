@@ -238,11 +238,15 @@ void *send_items(void *args) {
 
 	Node *stop_node = create_node("%%%STOPTIME%%%");
 	printf("(S): DONE. Sending stop_node %s to reducer.\n", stop_node->word);
+
 	#if LINUXENVIRONMENT
 		send_node(sender->msq_connection, stop_node);
 	#endif
+
+	printf("(S): Deleting stop_node.\n");
 	delete_node(stop_node);
 
+	printf("(S): Destroying sender.\n");
 	sender_destroy(sender);
 
 	printf("(S): Exiting.\n");
@@ -252,6 +256,9 @@ void *send_items(void *args) {
 
 
 void sender_destroy(Sender *sender) {
-	destroy_message_queue_connection(sender->msq_connection);
+	#if LINUXENVIRONMENT
+		destroy_message_queue_connection(sender->msq_connection);
+	#endif
+
 	free(sender);
 }
