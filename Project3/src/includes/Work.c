@@ -225,13 +225,15 @@ void *send_items(void *args) {
 		printf("\tCurrent dll_size = %d\n", dll_size);
 
 		// Send the node across the message queue
-		for(int i = 0; i < retrieved_node->count; i++) {
-			#if LINUXENVIRONMENT
-				send_node(sender->msq_connection, retrieved_node);
-			#endif
-		}
+		if(retrieved_node != NULL) {
+			for(int i = 0; i < retrieved_node->count; i++) {
+				#if LINUXENVIRONMENT
+					send_node(sender->msq_connection, retrieved_node);
+				#endif
+			}
 
-		delete_node(retrieved_node);
+			delete_node(retrieved_node);
+		}
 	}
 
 
