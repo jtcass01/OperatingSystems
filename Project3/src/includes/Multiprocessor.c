@@ -85,12 +85,14 @@ void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 			#if 1
 				printf("Creating map threads for directory: %s\n", process_node->word);
 			#endif
+
 			create_map_threads(process_node->word, bufferSize);
 
 			// exit child process
-#if 1
-			printf("I am the child with pid = %d and process_index = %d, from parent = %d, DONE.\n", getpid(), process_index, getppid());
-#endif
+			#if 1
+				printf("I am the child with pid = %d and process_index = %d, from parent = %d, DONE with %s.\n", getpid(), process_index, getppid(), process_node->word);
+			#endif
+			delete_node(process_node);
 
 			exit(0);
 		}
