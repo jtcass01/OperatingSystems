@@ -191,14 +191,6 @@ void *send_items(void *args) {
 
 		// Pop a node off and send it across the message queue
 		retrieved_node = dll_pop_head(sender->dll_buffer);
-		printf("(S) : Sending retrieved node to message queue: "); print_node(retrieved_node);
-
-		// Send the node across the message queue
-		for(int i = 0; i < retrieved_node->count; i++) {
-			#if LINUXENVIRONMENT
-				send_node(sender->msq_connection, retrieved_node);
-			#endif
-		}
 
 		// Update done_flag and dll_size
 		done_flag = sender->dll_buffer->done;
@@ -228,8 +220,16 @@ void *send_items(void *args) {
 		printf("Current empty sempahore_value: %i.\n", semaphore_value);
 
 		// Consume item
-		printf("(S) : Node Retrieved = ");
-		print_node(retrieved_node);
+		printf("(S) : Sending retrieved node to message queue: "); print_node(retrieved_node);
+		printf("\tCurrent dll_size = %d\n", dll_size);
+
+		// Send the node across the message queue
+		for(int i = 0; i < retrieved_node->count; i++) {
+			#if LINUXENVIRONMENT
+				send_node(sender->msq_connection, retrieved_node);
+			#endif
+		}
+
 		delete_node(retrieved_node);
 	}
 
