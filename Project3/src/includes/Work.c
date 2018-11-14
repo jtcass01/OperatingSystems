@@ -154,7 +154,6 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 
 void *send_items(void *args) {
 	Sender *sender = args;
-	DoublyLinkedList *popped_nodes = dll_create();
 	int done_flag = 0, dll_size = 0, semaphore_value;
 	printf("(S): BEGINING.\n");
 
@@ -239,12 +238,10 @@ void *send_items(void *args) {
 
 	Node *stop_node = create_node("%%%STOPTIME%%%");
 	printf("(S): DONE. Sending stop_node %s to reducer.\n", stop_node->word);
-	send_node(sender->msq_connection, stop_node);
+	#if LINUXENVIRONMENT
+		send_node(sender->msq_connection, stop_node);
+	#endif
 	delete_node(stop_node);
-
-
-	dll_print(popped_nodes);
-	dll_destroy(popped_nodes);
 
 	sender_destroy(sender);
 
