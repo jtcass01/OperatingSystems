@@ -90,6 +90,7 @@ void create_map_processes(DoublyLinkedList *directoryPaths, int bufferSize) {
 #if 1
 			printf("I am the child with pid = %d and process_index = %d, from parent = %d, DONE.\n", getpid(), process_index, getppid());
 #endif
+
 			exit(0);
 		}
 	}

@@ -36,9 +36,12 @@ Work *work_create(DoublyLinkedList *dll_buffer, int bufferSize, char *file_name,
 }
 
 void *do_work(void *args) {
-	int semaphore_value;
+	#if DEBUG
+		int semaphore_value;
+		printf("(W): %s BEGINING.\n", work->file_name);
+	#endif
+
 	Work *work = args;
-	printf("(W): %s BEGINING.\n", work->file_name);
 	// Open work file. Rewind buffer to beginning.
 	FILE *data_buffer = fopen(work->file_name, "r");
 	rewind(data_buffer);
@@ -144,12 +147,13 @@ Sender *sender_create(DoublyLinkedList *dll_buffer, sem_t *empty, sem_t *full, p
 
 
 void *send_items(void *args) {
-	Sender *sender = args;
-	int done_flag = 0, dll_size = 0, semaphore_value;
-
 	#if DEBUG
+		int semaphore_value;
 		printf("(S): BEGINING.\n");
 	#endif
+
+	Sender *sender = args;
+	int done_flag = 0, dll_size = 0;
 
 	while (!done_flag || dll_size != 0) {
 		Node *retrieved_node;
