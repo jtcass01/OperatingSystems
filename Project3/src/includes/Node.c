@@ -81,5 +81,5 @@ int compare_node_by_word(Node *node1, Node *node2) {
 
 
 void log_node(Node *node, FILE *log_file) {
-	fprintf(log_file, "%s,%d", node->word, node->count);
+	fprintf(log_file, "%s:%d", node->word, node->count);
 }
