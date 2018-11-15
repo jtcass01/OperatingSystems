@@ -1,6 +1,8 @@
 Project completed by: Jacob Taylor Cassady (1884619)
 
-As far as I am aware, the project meets the requirements as described completely.
+As far as I am aware, the project meets the requirements as described completely
+but fails the valgrind test due to issues with improper memory allocation when using
+the message queue.  Gave up on trying to fix.
 
 My message struct is copied below.  I chose this size for the message because no word
 will exceed MAXWORDSIZE in length and words are what we are sending via message.  Also,
